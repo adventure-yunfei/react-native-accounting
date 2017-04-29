@@ -1,14 +1,20 @@
 import React, { PropTypes } from 'react';
-import { View, TouchableWithoutFeedback, Image, Text, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import Tabbar from 'react-native-tabbar';
+
+import BaseText from '../../components/BaseText';
+import FakeIcon from '../../components/FakeIcon';
+import { Geometries } from '../../variables';
 
 const styles = StyleSheet.create({
   tabbarContainer: {
-    flexDirection: 'row'
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    backgroundColor: 'rgba(128,128,128,.9)'
   },
 
   tabbarItem: {
-    flex: 1,
     alignItems: 'center',
     justifyContent: 'center'
   }
@@ -16,29 +22,37 @@ const styles = StyleSheet.create({
 
 class TabbarItem extends React.PureComponent {
   static propTypes = {
-    icon: PropTypes.string.isRequired,
+    iconName: PropTypes.string.isRequired,
     label: PropTypes.string.isRequired,
-    onPress: PropTypes.func.isRequired
+    onPress: PropTypes.func
   }
   render() {
-    const { icon, label, onPress } = this.props;
+    const { iconName, label, onPress } = this.props;
     return (
-      <TouchableWithoutFeedback onPress={onPress} style={styles.tabbarItem}>
-        <View>
-          <Image source={icon} />
-          <Text>{label}</Text>
+      <TouchableOpacity onPress={onPress}>
+        <View style={styles.tabbarItem}>
+          <FakeIcon name={iconName} color="#fff" />
+          <BaseText color="#fff">{label}</BaseText>
         </View>
-      </TouchableWithoutFeedback>
+      </TouchableOpacity>
     );
   }
 }
 
 export default class HomeTabbar extends React.PureComponent {
+  static propTypes = {
+    navigation: PropTypes.object.isRequired
+  }
+
+  toAccountsScreen = () => {
+    this.props.navigation.navigate('Accounts');
+  }
+
   render() {
     return (
-      <Tabbar>
+      <Tabbar height={Geometries.Tabbar}>
         <View style={styles.tabbarContainer}>
-          <TabbarItem label="账户 as" />
+          <TabbarItem iconName="credit-card" label="账户" onPress={this.toAccountsScreen} />
         </View>
       </Tabbar>
     );
