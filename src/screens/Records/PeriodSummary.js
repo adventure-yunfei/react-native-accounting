@@ -1,5 +1,44 @@
 import React, { PropTypes } from 'react';
-import { View, Text } from 'react-native';
+import { View, StyleSheet } from 'react-native';
+
+import BaseText from '../../components/BaseText';
+
+const SummaryColor = '#725715';
+const PaddingLeft = 17;
+
+const styles = StyleSheet.create({
+  rootContainer: {
+    backgroundColor: '#FDD352',
+    paddingBottom: 16,
+    paddingTop: 33
+  },
+
+  balanceContainer: {
+    paddingLeft: PaddingLeft
+  },
+  primaryAmount: {
+    color: SummaryColor,
+    fontSize: 34
+  },
+
+  secondaryAmount: {
+    color: SummaryColor,
+    fontSize: 18
+  },
+
+  descLabel: {
+    color: SummaryColor,
+    fontSize: 12
+  },
+
+  secondaryContainer: {
+    flexDirection: 'row',
+    paddingLeft: PaddingLeft
+  },
+  secondaryContainerItem: {
+    flex: 1
+  }
+});
 
 export default class PeriodSummary extends React.PureComponent {
   static propTypes = {
@@ -11,17 +50,19 @@ export default class PeriodSummary extends React.PureComponent {
   render() {
     const { balance, income, expenditure } = this.props;
     return (
-      <View>
-        <View><Text>{balance.toFixed(2)}</Text></View>
-        <Text>结余</Text>
-        <View>
-          <View>
-            <Text>{income.toFixed(2)}</Text>
-            <View>收入</View>
+      <View style={styles.rootContainer}>
+        <View style={styles.balanceContainer}>
+          <BaseText style={styles.primaryAmount}>{balance.toFixed(2)}</BaseText>
+          <BaseText style={styles.descLabel}>结余</BaseText>
+        </View>
+        <View style={styles.secondaryContainer}>
+          <View style={styles.secondaryContainerItem}>
+            <BaseText style={styles.secondaryAmount}>{income.toFixed(2)}</BaseText>
+            <BaseText style={styles.descLabel}>收入</BaseText>
           </View>
-          <View>
-            <Text>{expenditure.toFixed(2)}</Text>
-            <View>支出</View>
+          <View style={styles.secondaryContainerItem}>
+            <BaseText style={styles.secondaryAmount}>{expenditure.toFixed(2)}</BaseText>
+            <BaseText style={styles.descLabel}>支出</BaseText>
           </View>
         </View>
       </View>

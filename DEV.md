@@ -5,6 +5,13 @@
 - 找出你得 avd 实例: `$ android.bat list avd`, 拷贝要启动的 avd 名称
 - 启动 avd: `$ emulator.exe -avd <avd_name>`
 
+# 记录
+
+### 截图尺寸与代码尺寸的对应
+
+- 汉字: 2:1
+- 数字: 1.5:1 (即数字的实际占据尺寸是指定尺寸的3/4)
+
 # 问题
 
 ### Hot Reloading 不生效

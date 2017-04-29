@@ -27,15 +27,17 @@ export default class Home extends React.PureComponent {
   }
 
   render() {
+    const { navigation } = this.props;
+
     return (
       <View style={styles.homeContainer}>
         <ScrollView>
           <SummaryHeader />
           <WriteOneButton />
-          <SummaryDetails />
+          <SummaryDetails navigation={navigation} />
           <View style={styles.contentBottomPlaceholder} />
         </ScrollView>
-        <HomeTabbar navigation={this.props.navigation} />
+        <HomeTabbar navigation={navigation} />
       </View>
     );
   }

@@ -5,6 +5,7 @@
   "rules": {
     "comma-dangle": "off",
     "linebreak-style": "off",
+    "no-underscore-dangle": "off",
 
     "react/jsx-filename-extension": "off",
     "react/no-multi-comp": "off",

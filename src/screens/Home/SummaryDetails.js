@@ -81,13 +81,24 @@ class DetailRow extends React.PureComponent {
 }
 
 export default class SummaryDetails extends React.PureComponent {
+  static propTypes = {
+    navigation: PropTypes.object.isRequired
+  }
+
+  onRowPress = () => {
+    this.props.navigation.navigate('Records', {
+      startTime: Date.now(),
+      endTime: Date.now()
+    });
+  }
+
   render() {
     return (
       <View>
-        <DetailRow icon="date-range" title="今天" subtitle="还没有记账" income={0} expenditure={0} />
-        <DetailRow icon="date-range" title="本周" subtitle="4月1日 - 4月7日" income={0} expenditure={0} />
-        <DetailRow icon="date-range" title="4月" subtitle="4月1日 - 4月30日" income={0} expenditure={0} />
-        <DetailRow icon="date-range" title="本年" subtitle="2017年" income={0} expenditure={0} />
+        <DetailRow onPress={this.onRowPress} icon="date-range" title="今天" subtitle="还没有记账" income={0} expenditure={0} />
+        <DetailRow onPress={this.onRowPress} icon="date-range" title="本周" subtitle="4月1日 - 4月7日" income={0} expenditure={0} />
+        <DetailRow onPress={this.onRowPress} icon="date-range" title="4月" subtitle="4月1日 - 4月30日" income={0} expenditure={0} />
+        <DetailRow onPress={this.onRowPress} icon="date-range" title="本年" subtitle="2017年" income={0} expenditure={0} />
       </View>
     );
   }

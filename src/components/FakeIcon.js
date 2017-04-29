@@ -8,7 +8,7 @@ export default class FakeIcon extends React.PureComponent {
     containerStyle: PropTypes.any
   }
 
-  defaultProps = {
+  static defaultProps = {
     size: 24,
     color: '#333'
   }
