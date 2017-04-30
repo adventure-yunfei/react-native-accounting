@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { TouchableHighlight, View, StyleSheet } from 'react-native';
 
 import BaseText from '../../../components/BaseText';
 import { editorStyles } from './editorCommon';
@@ -24,18 +24,23 @@ const styles = StyleSheet.create({
 
 export default class LabeledItem extends React.PureComponent {
   static propTypes = {
+    onPress: PropTypes.func,
     tip: PropTypes.string.isRequired,
-    text: PropTypes.node
+    text: PropTypes.node,
+    modal: PropTypes.node
   }
 
   render() {
-    const { tip, text } = this.props;
+    const { tip, text, onPress, modal } = this.props;
 
     return (
-      <View style={[editorStyles.row, styles.container]} onPress={this.onPress} >
-        <BaseText style={styles.labelTip}>{tip}</BaseText>
-        <BaseText style={styles.text}>{text}</BaseText>
-      </View>
+      <TouchableHighlight onPress={onPress}>
+        <View style={[editorStyles.row, styles.container]}>
+          <BaseText style={styles.labelTip}>{tip}</BaseText>
+          <BaseText style={styles.text}>{text}</BaseText>
+          {modal}
+        </View>
+      </TouchableHighlight>
     );
   }
 }

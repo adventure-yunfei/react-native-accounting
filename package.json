@@ -8,6 +8,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "antd-mobile": "^1.1.1",
     "react": "16.0.0-alpha.6",
     "react-native": "0.43.4",
     "react-native-tabbar": "^1.0.0",
@@ -16,6 +17,7 @@
   "devDependencies": {
     "babel-eslint": "^7.2.3",
     "babel-jest": "19.0.0",
+    "babel-plugin-import": "^1.1.1",
     "babel-preset-react-native": "1.9.1",
     "eslint": "^3.19.0",
     "eslint-config-airbnb": "^14.1.0",
