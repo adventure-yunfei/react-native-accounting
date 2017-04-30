@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { TouchableHighlight, Text, StyleSheet } from 'react-native';
 
 import FakeLinearGradient from '../../components/FakeLinearGradient';
@@ -27,7 +27,12 @@ const styles = StyleSheet.create({
 });
 
 export default class WriteOneButton extends React.PureComponent {
+  static propTypes = {
+    navigation: PropTypes.object.isRequired
+  }
+
   onPress = () => {
+    this.props.navigation.navigate('PublishRecord');
   }
 
   render() {

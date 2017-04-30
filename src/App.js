@@ -3,6 +3,7 @@ import { StackNavigator } from 'react-navigation';
 import Home from './screens/Home';
 import Accounts from './screens/Accounts';
 import Records from './screens/Records';
+import PublishRecord from './screens/PublishRecord';
 
 export default StackNavigator(
   {
@@ -16,6 +17,10 @@ export default StackNavigator(
 
     Accounts: {
       screen: Accounts
+    },
+
+    PublishRecord: {
+      screen: PublishRecord
     }
   },
 

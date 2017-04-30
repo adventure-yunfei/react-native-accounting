@@ -10,6 +10,8 @@ const styles = StyleSheet.create({
   }
 });
 
+export const baseTextStyle = styles.baseText;
+
 export default class BaseText extends React.PureComponent {
   static propTypes = Text.propTypes
 

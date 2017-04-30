@@ -33,7 +33,7 @@ export default class Home extends React.PureComponent {
       <View style={styles.homeContainer}>
         <ScrollView>
           <SummaryHeader />
-          <WriteOneButton />
+          <WriteOneButton navigation={navigation} />
           <SummaryDetails navigation={navigation} />
           <View style={styles.contentBottomPlaceholder} />
         </ScrollView>

@@ -10,6 +10,7 @@ export const Colors = {
   Transfer: '#8A8A8A',
 
   Text_Hint: '#999',
+  Text_Gray: '#725715',
 
   BG_Default: '#F2F2F2'
 };
