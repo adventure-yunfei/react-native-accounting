@@ -2,6 +2,8 @@ import React from 'react';
 
 import databases from '../databases';
 
+const dbChanges = {};
+
 function getReadOnlyDBs() {
   const result = {
     __dataCalls: [] // Record fetch data calls
@@ -27,14 +29,22 @@ function getReadOnlyDBs() {
 }
 
 function listenToDBChanges(dataCalls, callback) {
-  const changes = dataCalls.map(([dbName, method, ...args]) => {
-    return databases[dbName].changes({
-      since: 'now',
-      live: true
-    }).on('change', callback);
+  const unlistens = dataCalls.map(([dbName, method, ...args]) => {
+    let change = dbChanges[dbName];
+    if (!change) {
+      change = databases[dbName].changes({
+        since: 'now',
+        live: true
+      });
+      dbChanges[dbName] = change;
+    }
+    change.on('change', callback);
+    return function unlisten() {
+      change.removeListener('change', callback);
+    };
   });
   return function cancel() {
-    changes.forEach(chg => chg.cancel());
+    unlistens.forEach(unlisten => unlisten());
   };
 }
 
@@ -55,6 +65,7 @@ export default function connectDB(mapDBsToProps) {
               if (this.__mounted && dbs === this.__readOnlyDBs) {
                 this.__unlistenDBChanges && this.__unlistenDBChanges();
                 this.__unlistenDBChanges = listenToDBChanges(dbs.__dataCalls, doMapDBs);
+                // listenToDBChanges(dbs.__dataCalls, () => doMapDBs());
                 this.setState(data);
               }
             });

@@ -8,6 +8,7 @@ dbManager.createDatabase({
     amount: 'number',
     categoryId: 'string',
     accountId: 'string',
+    toAccountId: 'string', // 转账目标账户
     timestamp: 'number',
     remark: 'string'
   })
