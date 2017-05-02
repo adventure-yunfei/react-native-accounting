@@ -1,5 +1,6 @@
 import { StackNavigator } from 'react-navigation';
 
+import './setupApp';
 import Home from './screens/Home';
 import Accounts from './screens/Accounts';
 import Records from './screens/Records';

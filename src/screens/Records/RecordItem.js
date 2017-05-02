@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import { View, StyleSheet } from 'react-native';
+import moment from 'moment';
 
 import BaseText from '../../components/BaseText';
 import FakeIcon from '../../components/FakeIcon';
@@ -57,19 +58,29 @@ const styles = StyleSheet.create({
 });
 
 export default class RecordItem extends React.PureComponent {
+  static propTypes = {
+    record: PropTypes.object.isRequired,
+    catName: PropTypes.string.isRequired
+  }
+
   render() {
+    const { record, catName } = this.props;
+    const mDate = moment(record.timestamp);
+
     return (
       <View style={styles.container}>
         <View style={styles.date}>
-          <BaseText style={styles.date__title}>26</BaseText>
-          <BaseText style={styles.date__subtitle}>周三</BaseText>
+          <BaseText style={styles.date__title}>{mDate.format('DD')}</BaseText>
+          <BaseText style={styles.date__subtitle}>{mDate.format('ddd')}</BaseText>
         </View>
         <FakeIcon size={47} />
         <View style={styles.desc}>
-          <BaseText style={styles.desc__cat}>工资收入</BaseText>
-          <BaseText style={styles.desc__note}>公积金</BaseText>
+          <BaseText style={styles.desc__cat}>{catName}</BaseText>
+          <BaseText style={styles.desc__note}>{record.remark}</BaseText>
         </View>
-        <BaseText style={[styles.amount, styles.amount_income]}>12312.00</BaseText>
+        <BaseText style={[styles.amount, styles.amount_income]}>
+          {record.amount.toFixed(2)}
+        </BaseText>
       </View>
     );
   }

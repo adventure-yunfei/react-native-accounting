@@ -1,7 +1,10 @@
 import React, { PropTypes } from 'react';
 import { View, TextInput, StyleSheet } from 'react-native';
+import isDecimal from 'validator/lib/isDecimal';
 
 import { editorStyles } from './editorCommon';
+
+export const PropKeyAmount = 'amount';
 
 const styles = StyleSheet.create({
   component: {
@@ -12,8 +15,8 @@ const styles = StyleSheet.create({
 
 export default class AmountInput extends React.PureComponent {
   static propTypes = {
-    onChange: PropTypes.func.isRequired,
-    value: PropTypes.number,
+    onPropChange: PropTypes.func.isRequired,
+    data: PropTypes.object.isRequired,
     textStyle: PropTypes.any
   }
 
@@ -21,17 +24,31 @@ export default class AmountInput extends React.PureComponent {
     value: 0
   }
 
-  onChangeText = (text) => {
-    this.props.onChange(text);
+  componentWillMount() {
+    this.setState({
+      inputValue: this.props.data[PropKeyAmount].toFixed(2)
+    });
+  }
+
+  onChangeText = text => this.setState({ inputValue: text });
+
+  onBlur = () => {
+    const { inputValue } = this.state;
+    if (isDecimal(inputValue)) {
+      this.props.onPropChange(PropKeyAmount, parseFloat(inputValue));
+    } else {
+      this.setState({ inputValue: this.props.data[PropKeyAmount].toFixed(2) });
+    }
   }
 
   render() {
-    const { textStyle, value } = this.props;
+    const { textStyle } = this.props;
+    const { inputValue } = this.state;
     return (
       <View style={editorStyles.row}>
         <TextInput
           onChangeText={this.onChangeText} style={[styles.component, textStyle]}
-          defaultValue={value.toFixed(2)} />
+          value={inputValue} onBlur={this.onBlur} />
       </View>
     );
   }

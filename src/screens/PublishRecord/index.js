@@ -1,3 +1,4 @@
+import React, { PropTypes } from 'react';
 import { TabNavigator, TabBarTop } from 'react-navigation';
 import PublishExpenditureRecord from './PublishExpenditureRecord';
 import PublishIncomeRecord from './PublishIncomeRecord';
@@ -6,7 +7,7 @@ import { Colors } from '../../variables';
 
 const PublishTitle = '记一笔';
 
-export default TabNavigator(
+const PublishRecordNavigator = TabNavigator(
   {
     Expenditure: {
       screen: PublishExpenditureRecord,
@@ -52,3 +53,13 @@ export default TabNavigator(
     }
   }
 );
+
+export default class PublishRecord extends React.PureComponent {
+  static propTypes = {
+    navigation: PropTypes.object.isRequired
+  }
+
+  render() {
+    return <PublishRecordNavigator screenProps={{ rootNavigation: this.props.navigation }} />;
+  }
+}

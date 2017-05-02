@@ -22,16 +22,18 @@ const styles = StyleSheet.create({
 
 export default class EditorButtonBar extends React.PureComponent {
   static propTypes = {
-    containerStyle: PropTypes.any
+    containerStyle: PropTypes.any,
+    onSavePress: PropTypes.func.isRequired,
+    onPublishAgainPress: PropTypes.func.isRequired
   }
 
   render() {
-    const { containerStyle } = this.props;
+    const { containerStyle, onSavePress, onPublishAgainPress } = this.props;
 
     return (
       <View style={[styles.container, containerStyle]}>
-        <Button containerStyle={styles.saveBtn} type="primary">保存</Button>
-        <Button containerStyle={styles.secondaryBtn} type="gray">再记一笔</Button>
+        <Button containerStyle={styles.saveBtn} type="primary" onPress={onSavePress}>保存</Button>
+        <Button containerStyle={styles.secondaryBtn} type="gray" onPress={onPublishAgainPress}>再记一笔</Button>
       </View>
     );
   }

@@ -1,44 +1,58 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import Picker from 'antd-mobile/lib/picker';
 
 import LabeledItem from './LabeledItem';
+import flatToTree from '../../../utils/flatToTree';
+import utils from '../../../utils';
 
-const categoriesData = [
-  {
-    value: 1,
-    label: '食品酒水',
-    children: [{
-      value: 1,
-      label: '吃饭买菜'
-    }, {
-      value: 2,
-      label: '零食'
-    }]
-  },
-  {
-    value: 2,
-    label: '休闲娱乐',
-    children: [{
-      value: 1,
-      label: '充值'
-    }, {
-      value: 2,
-      label: '出游'
-    }]
-  }
-];
+export const PropKeyCatId = 'categoryId';
 
 export default class CategorySelector extends React.PureComponent {
-  state = {
-    modalVisible: false
+  static propTypes = {
+    onPropChange: PropTypes.func.isRequired,
+    categories: PropTypes.array.isRequired
   }
 
-  onItemPress = () => this.setState({ modalVisible: true })
+  componentWillMount() {
+    this.prepareCategoriesData(this.props.categories);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.categories !== this.props.categories) {
+      this.prepareCategoriesData(nextProps.categories);
+    }
+  }
+
+  onPickerChange = ([, subCatId]) => {
+    this.props.onPropChange(PropKeyCatId, subCatId);
+  }
+
+  prepareCategoriesData(accounts) {
+    const genItem = item => ({
+      value: item._id,
+      label: item.name
+    });
+    this.setState({
+      categoriesTree: flatToTree(accounts, genItem)
+    });
+  }
 
   render() {
+    const { categories, data } = this.props;
+    let text = null;
+    let pickerValue = null;
+    if (data[PropKeyCatId]) {
+      const cat = utils.findBy(categories, '_id', data[PropKeyCatId]);
+      const parentCat = cat && utils.findBy(categories, '_id', cat.parentId);
+      if (parentCat) {
+        text = `${parentCat.name} > ${cat.name}`;
+        pickerValue = [parentCat._id, cat._id];
+      }
+    }
+
     return (
-      <Picker triggerType="onPress" data={categoriesData}>
-        <LabeledItem tip="分类" text="食品酒水 &gt; 吃饭买菜" />
+      <Picker triggerType="onPress" data={this.state.categoriesTree} value={pickerValue} onPickerChange={this.onPickerChange}>
+        <LabeledItem tip="分类" text={text} />
       </Picker>
     );
   }

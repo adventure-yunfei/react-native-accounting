@@ -3,6 +3,7 @@ import { View, TouchableHighlight, StyleSheet } from 'react-native';
 
 import BaseText from '../../components/BaseText';
 import FakeIcon from '../../components/FakeIcon';
+import { getDayPeriod, getWeekPeriod, getMonthPeriod, getYearPeriod } from '../../utils/period';
 
 const styles = StyleSheet.create({
   detailRow: {
@@ -85,20 +86,27 @@ export default class SummaryDetails extends React.PureComponent {
     navigation: PropTypes.object.isRequired
   }
 
-  onRowPress = () => {
-    this.props.navigation.navigate('Records', {
-      startTime: Date.now(),
-      endTime: Date.now()
-    });
+  jumpToTodayRecords = () => {
+    this.props.navigation.navigate('Records', getDayPeriod());
   }
+  jumpToWeekRecords = () => {
+    this.props.navigation.navigate('Records', getWeekPeriod());
+  }
+  jumpToMonthRecords = () => {
+    this.props.navigation.navigate('Records', getMonthPeriod());
+  }
+  jumpToYearRecords = () => {
+    this.props.navigation.navigate('Records', getYearPeriod());
+  }
+
 
   render() {
     return (
       <View>
-        <DetailRow onPress={this.onRowPress} icon="date-range" title="今天" subtitle="还没有记账" income={0} expenditure={0} />
-        <DetailRow onPress={this.onRowPress} icon="date-range" title="本周" subtitle="4月1日 - 4月7日" income={0} expenditure={0} />
-        <DetailRow onPress={this.onRowPress} icon="date-range" title="4月" subtitle="4月1日 - 4月30日" income={0} expenditure={0} />
-        <DetailRow onPress={this.onRowPress} icon="date-range" title="本年" subtitle="2017年" income={0} expenditure={0} />
+        <DetailRow onPress={this.jumpToTodayRecords} icon="date-range" title="今天" subtitle="还没有记账" income={0} expenditure={0} />
+        <DetailRow onPress={this.jumpToWeekRecords} icon="date-range" title="本周" subtitle="4月1日 - 4月7日" income={0} expenditure={0} />
+        <DetailRow onPress={this.jumpToMonthRecords} icon="date-range" title="4月" subtitle="4月1日 - 4月30日" income={0} expenditure={0} />
+        <DetailRow onPress={this.jumpToYearRecords} icon="date-range" title="本年" subtitle="2017年" income={0} expenditure={0} />
       </View>
     );
   }

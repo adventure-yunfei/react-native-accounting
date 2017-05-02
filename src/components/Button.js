@@ -31,18 +31,16 @@ const styles = StyleSheet.create({
 
 export default class Button extends React.PureComponent {
   static propTypes = {
+    onPress: PropTypes.func,
     containerStyle: PropTypes.any,
     type: PropTypes.string,
     children: PropTypes.node
   }
 
-  onPress = () => {
-  }
-
   render() {
-    const { containerStyle, type, children } = this.props;
+    const { onPress, containerStyle, type, children } = this.props;
     return (
-      <TouchableHighlight onPress={this.onPress} style={[styles.container, styles[`container_${type}`], containerStyle]}>
+      <TouchableHighlight onPress={onPress} style={[styles.container, styles[`container_${type}`], containerStyle]}>
         {typeof children === 'string' ? <Text style={[baseTextStyle, styles.label, styles[`label_${type}`]]}>{children}</Text> : children}
       </TouchableHighlight>
     );
