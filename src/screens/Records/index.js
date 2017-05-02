@@ -7,6 +7,7 @@ import connectDB from '../../lib/connectDB';
 // import getDate from '../../utils/getDate';
 import EnumRecordType from '../../enums/EnumRecordType';
 import { Colors } from '../../variables';
+import utils from '../../utils';
 
 const TYPE_DAY = 'day';
 const TYPE_WEEK = 'week';
@@ -67,16 +68,20 @@ const styles = StyleSheet.create({
     dbs.records.allDocsData()
   ]).then(([categories, records]) => {
     const { state: { params: { startTime, endTime } } } = navigation;
+    const catMap = utils.arrayToMap(categories, '_id');
     return {
-      categories,
-      records: records.filter(({ timestamp }) => startTime <= timestamp && timestamp <= endTime)
+      detailRecords: records
+        .filter(({ timestamp }) => startTime <= timestamp && timestamp <= endTime)
+        .map(record => ({
+          ...record,
+          categoryName: catMap[record.categoryId].name
+        }))
     };
   });
 })
 export default class Records extends React.PureComponent {
   static propTypes = {
-    categories: PropTypes.array,
-    records: PropTypes.array
+    detailRecords: PropTypes.array,
   }
 
   static defaultProps = {
@@ -96,12 +101,12 @@ export default class Records extends React.PureComponent {
   render() {
     // const { navigation: { state: { params: { startTime, endTime } } } } = this.props;
     // const displayType = getType(startTime, endTime);
-    const { records, categories } = this.props;
+    const { detailRecords = [] } = this.props;
 
     return (
       <ScrollView style={styles.container}>
-        <PeriodSummary {...calculateSummary(records)} />
-        <RecordItemList records={records || []} categories={categories || []} />
+        <PeriodSummary {...calculateSummary(detailRecords)} />
+        <RecordItemList detailRecords={detailRecords} />
       </ScrollView>
     );
   }

@@ -5,6 +5,7 @@ import moment from 'moment';
 import BaseText from '../../components/BaseText';
 import FakeIcon from '../../components/FakeIcon';
 import { Colors } from '../../variables';
+import EnumRecordType from '../../enums/EnumRecordType';
 
 const styles = StyleSheet.create({
   container: {
@@ -59,13 +60,18 @@ const styles = StyleSheet.create({
 
 export default class RecordItem extends React.PureComponent {
   static propTypes = {
-    record: PropTypes.object.isRequired,
-    catName: PropTypes.string.isRequired
+    detailRecord: PropTypes.object.isRequired
   }
 
   render() {
-    const { record, catName } = this.props;
-    const mDate = moment(record.timestamp);
+    const { detailRecord } = this.props;
+    const mDate = moment(detailRecord.timestamp);
+    const amountStyle = [styles.amount];
+    switch (detailRecord.type) {
+      case EnumRecordType.Expenditure: amountStyle.push(styles.amount_expenditure); break;
+      case EnumRecordType.Income: amountStyle.push(styles.Income); break;
+      case EnumRecordType.Transfer: amountStyle.push(styles.Transfer); break;
+    }
 
     return (
       <View style={styles.container}>
@@ -75,11 +81,11 @@ export default class RecordItem extends React.PureComponent {
         </View>
         <FakeIcon size={47} />
         <View style={styles.desc}>
-          <BaseText style={styles.desc__cat}>{catName}</BaseText>
-          <BaseText style={styles.desc__note}>{record.remark}</BaseText>
+          <BaseText style={styles.desc__cat}>{detailRecord.categoryName}</BaseText>
+          <BaseText style={styles.desc__note}>{detailRecord.remark}</BaseText>
         </View>
-        <BaseText style={[styles.amount, styles.amount_income]}>
-          {record.amount.toFixed(2)}
+        <BaseText style={amountStyle}>
+          {detailRecord.amount.toFixed(2)}
         </BaseText>
       </View>
     );

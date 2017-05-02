@@ -2,21 +2,18 @@ import React, { PropTypes } from 'react';
 import { View } from 'react-native';
 
 import RecordItem from './RecordItem';
-import utils from '../../utils';
 
 export default class RecordItemList extends React.PureComponent {
   static propTypes = {
-    records: PropTypes.array.isRequired,
-    categories: PropTypes.array.isRequired
+    detailRecords: PropTypes.array.isRequired,
   }
 
   render() {
-    const { records, categories } = this.props;
-    const getCatName = catId => utils.findBy(categories, '_id', catId).name;
+    const { detailRecords } = this.props;
     return (
       <View>
-        {records.map(record => (
-          <RecordItem key={record._id} record={record} catName={getCatName(record.categoryId)} />
+        {detailRecords.map(detailRecord => (
+          <RecordItem key={detailRecord._id} detailRecord={detailRecord} />
         ))}
       </View>
     );
