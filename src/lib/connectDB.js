@@ -1,4 +1,5 @@
 import React from 'react';
+import hoistNonReactStatic from 'hoist-non-react-statics';
 
 import databases from '../databases';
 
@@ -86,6 +87,8 @@ export default function connectDB(mapDBsToProps) {
         return <ViewComponent {...this.props} {...this.state} />;
       }
     }
+
+    hoistNonReactStatic(DBConnectWrapper, ViewComponent);
 
     return DBConnectWrapper;
   };

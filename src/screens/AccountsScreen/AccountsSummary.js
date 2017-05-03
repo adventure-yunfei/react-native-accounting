@@ -43,27 +43,25 @@ const styles = StyleSheet.create({
 
 export default class PeriodSummary extends React.PureComponent {
   static propTypes = {
-    balance: PropTypes.number.isRequired,
-    income: PropTypes.number.isRequired,
-    expenditure: PropTypes.number.isRequired
+    netAssets: PropTypes.number.isRequired
   }
 
   render() {
-    const { balance, income, expenditure } = this.props;
+    const { netAssets } = this.props;
     return (
       <View style={styles.rootContainer}>
         <View style={styles.primaryContainer}>
-          <BaseText style={styles.primaryAmount}>{balance.toFixed(2)}</BaseText>
-          <BaseText style={styles.descLabel}>结余</BaseText>
+          <BaseText style={styles.primaryAmount}>{netAssets.toFixed(2)}</BaseText>
+          <BaseText style={styles.descLabel}>净资产</BaseText>
         </View>
         <View style={styles.secondaryContainer}>
           <View style={styles.secondaryContainerItem}>
-            <BaseText style={styles.secondaryAmount}>{income.toFixed(2)}</BaseText>
-            <BaseText style={styles.descLabel}>收入</BaseText>
+            <BaseText style={styles.secondaryAmount}>{netAssets.toFixed(2)}</BaseText>
+            <BaseText style={styles.descLabel}>资产</BaseText>
           </View>
           <View style={styles.secondaryContainerItem}>
-            <BaseText style={styles.secondaryAmount}>{expenditure.toFixed(2)}</BaseText>
-            <BaseText style={styles.descLabel}>支出</BaseText>
+            <BaseText style={styles.secondaryAmount}>0.00</BaseText>
+            <BaseText style={styles.descLabel}>负债</BaseText>
           </View>
         </View>
       </View>

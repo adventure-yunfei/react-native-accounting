@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import { NavigationActions } from 'react-navigation';
+import hoistNonReactStatic from 'hoist-non-react-statics';
 
 import CustomPropTypes from './CustomPropTypes';
 
@@ -13,6 +14,8 @@ export default function exposeRootNavigation(BaseComponent) {
       return <BaseComponent {...this.props} rootNavigation={this.context.rootNavigation} />;
     }
   }
+
+  hoistNonReactStatic(ExposeRootNavigationWrapper, BaseComponent);
 
   return ExposeRootNavigationWrapper;
 }
@@ -47,6 +50,8 @@ export function provideRootNavigationContext(BaseComponent) {
       };
     }
   }
+
+  hoistNonReactStatic(ProvideRootNavigationContextWrapper, BaseComponent);
 
   return ProvideRootNavigationContextWrapper;
 }

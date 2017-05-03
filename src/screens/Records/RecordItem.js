@@ -69,8 +69,8 @@ export default class RecordItem extends React.PureComponent {
     const amountStyle = [styles.amount];
     switch (detailRecord.type) {
       case EnumRecordType.Expenditure: amountStyle.push(styles.amount_expenditure); break;
-      case EnumRecordType.Income: amountStyle.push(styles.Income); break;
-      case EnumRecordType.Transfer: amountStyle.push(styles.Transfer); break;
+      case EnumRecordType.Income: amountStyle.push(styles.amount_income); break;
+      case EnumRecordType.Transfer: amountStyle.push(styles.amount_transfer); break;
       default: break;
     }
 

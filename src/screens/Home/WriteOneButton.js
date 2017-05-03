@@ -35,7 +35,7 @@ export default class WriteOneButton extends React.PureComponent {
   }
 
   onPress = () => {
-    this.props.rootNavigation.$navigateByPath('PublishRecord/Income');
+    this.props.rootNavigation.$navigateByPath('PublishRecord');
   }
 
   render() {

@@ -10,6 +10,7 @@
   "dependencies": {
     "antd-mobile": "^1.1.1",
     "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "hoist-non-react-statics": "^1.2.0",
     "lodash": "^4.17.4",
     "moment": "^2.18.1",
     "pouchdb-react-native": "^6.2.0",
