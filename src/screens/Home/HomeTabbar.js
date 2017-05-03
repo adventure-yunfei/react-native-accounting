@@ -4,6 +4,7 @@ import Tabbar from 'react-native-tabbar';
 
 import BaseText from '../../components/BaseText';
 import FakeIcon from '../../components/FakeIcon';
+import exposeRootNavigation from '../../lib/exposeRootNavigation';
 import { Geometries } from '../../variables';
 
 const styles = StyleSheet.create({
@@ -39,13 +40,14 @@ class TabbarItem extends React.PureComponent {
   }
 }
 
+@exposeRootNavigation
 export default class HomeTabbar extends React.PureComponent {
   static propTypes = {
-    navigation: PropTypes.object.isRequired
+    rootNavigation: PropTypes.object.isRequired
   }
 
   toAccountsScreen = () => {
-    this.props.navigation.navigate('Accounts');
+    this.props.rootNavigation.$navigateByPath('Accounts');
   }
 
   render() {

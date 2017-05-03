@@ -12,6 +12,7 @@ import { editorStyles } from './editorParts/editorCommon';
 import connectDB from '../../lib/connectDB';
 import { Colors } from '../../variables';
 import EnumRecordType from '../../enums/EnumRecordType';
+import exposeRootNavigation from '../../lib/exposeRootNavigation';
 
 const styles = StyleSheet.create({
   amountInput: {
@@ -20,6 +21,7 @@ const styles = StyleSheet.create({
 });
 
 @connectDB(mapDBsToProps)
+@exposeRootNavigation
 export default class PublishIncomeRecord extends PublishRecordBase {
   getInitState() {
     const initState = super.getInitState();

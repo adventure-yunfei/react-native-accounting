@@ -7,7 +7,7 @@ import { Colors } from '../../variables';
 
 const PublishTitle = '记一笔';
 
-const PublishRecordNavigator = TabNavigator(
+export default TabNavigator(
   {
     Expenditure: {
       screen: PublishExpenditureRecord,
@@ -35,6 +35,7 @@ const PublishRecordNavigator = TabNavigator(
   },
 
   {
+    backBehavior: 'none',
     tabBarComponent: TabBarTop,
     tabBarPosition: 'top',
     swipeEnabled: true,
@@ -53,13 +54,3 @@ const PublishRecordNavigator = TabNavigator(
     }
   }
 );
-
-export default class PublishRecord extends React.PureComponent {
-  static propTypes = {
-    navigation: PropTypes.object.isRequired
-  }
-
-  render() {
-    return <PublishRecordNavigator screenProps={{ rootNavigation: this.props.navigation }} />;
-  }
-}

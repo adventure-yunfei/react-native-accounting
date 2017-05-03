@@ -3,7 +3,6 @@ import { View, StyleSheet } from 'react-native';
 
 import PublishRecordBase, { mapDBsToProps } from './PublishRecordBase';
 import AmountInput from './editorParts/AmountInput';
-import CategorySelector from './editorParts/CategorySelector';
 import TransferAccountSelector, { PropKeyToAccountId } from './editorParts/TransferAccountSelector';
 import DateSelector from './editorParts/DateSelector';
 import RemarkInput from './editorParts/RemarkInput';
@@ -12,6 +11,7 @@ import { editorStyles } from './editorParts/editorCommon';
 import connectDB from '../../lib/connectDB';
 import { Colors } from '../../variables';
 import EnumRecordType from '../../enums/EnumRecordType';
+import exposeRootNavigation from '../../lib/exposeRootNavigation';
 
 const styles = StyleSheet.create({
   amountInput: {
@@ -20,6 +20,7 @@ const styles = StyleSheet.create({
 });
 
 @connectDB(mapDBsToProps)
+@exposeRootNavigation
 export default class PublishTransferRecord extends PublishRecordBase {
   getInitState() {
     const initState = super.getInitState();

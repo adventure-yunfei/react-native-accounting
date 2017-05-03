@@ -33,9 +33,7 @@ export function mapDBsToProps(dbs) {
 
 export default class PublishRecordBase extends React.PureComponent {
   static propTypes = {
-    screenProps: PropTypes.shape({
-      rootNavigation: PropTypes.object.isRequired
-    }).isRequired,
+    rootNavigation: PropTypes.object.isRequired,
     databases: PropTypes.object,
     accounts: PropTypes.array,
     categories: PropTypes.array
@@ -92,7 +90,7 @@ export default class PublishRecordBase extends React.PureComponent {
   }
 
   onSave = () => {
-    const { databases, screenProps: { rootNavigation } } = this.props;
+    const { databases, rootNavigation } = this.props;
     databases.records.post(this.state.data)
       .then(() => rootNavigation.navigate('Records', getDayPeriod()));
   }

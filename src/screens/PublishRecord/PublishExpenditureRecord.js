@@ -11,6 +11,7 @@ import EditorButtonBar from './editorParts/EditorButtonBar';
 import { editorStyles } from './editorParts/editorCommon';
 import connectDB from '../../lib/connectDB';
 import { Colors } from '../../variables';
+import exposeRootNavigation from '../../lib/exposeRootNavigation';
 
 const styles = StyleSheet.create({
   amountInput: {
@@ -19,6 +20,7 @@ const styles = StyleSheet.create({
 });
 
 @connectDB(mapDBsToProps)
+@exposeRootNavigation
 export default class PublishExpenditureRecord extends PublishRecordBase {
   render() {
     const { accounts = [], categories = [] } = this.props;
