@@ -6,6 +6,7 @@ import BaseText from '../../components/BaseText';
 import FakeIcon from '../../components/FakeIcon';
 import exposeRootNavigation from '../../lib/exposeRootNavigation';
 import { Geometries } from '../../variables';
+import CustomPropTypes from '../../lib/CustomPropTypes';
 
 const styles = StyleSheet.create({
   tabbarContainer: {
@@ -43,7 +44,7 @@ class TabbarItem extends React.PureComponent {
 @exposeRootNavigation
 export default class HomeTabbar extends React.PureComponent {
   static propTypes = {
-    rootNavigation: PropTypes.object.isRequired
+    rootNavigation: CustomPropTypes.rootNavigation.isRequired
   }
 
   toAccountsScreen = () => {

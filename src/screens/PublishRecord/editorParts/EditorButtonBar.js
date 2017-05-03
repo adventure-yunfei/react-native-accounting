@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react';
 import { View, StyleSheet } from 'react-native';
 
 import Button from '../../../components/Button';
+import CustomPropTypes from '../../../lib/CustomPropTypes';
 
 const styles = StyleSheet.create({
   container: {
@@ -22,7 +23,7 @@ const styles = StyleSheet.create({
 
 export default class EditorButtonBar extends React.PureComponent {
   static propTypes = {
-    containerStyle: PropTypes.any,
+    containerStyle: CustomPropTypes.style,
     onSavePress: PropTypes.func.isRequired,
     onPublishAgainPress: PropTypes.func.isRequired
   }

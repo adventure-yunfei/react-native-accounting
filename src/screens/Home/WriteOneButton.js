@@ -1,8 +1,9 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
 import { TouchableHighlight, Text, StyleSheet } from 'react-native';
 
 import FakeLinearGradient from '../../components/FakeLinearGradient';
 import exposeRootNavigation from '../../lib/exposeRootNavigation';
+import CustomPropTypes from '../../lib/CustomPropTypes';
 
 const styles = StyleSheet.create({
   container: {
@@ -30,7 +31,7 @@ const styles = StyleSheet.create({
 @exposeRootNavigation
 export default class WriteOneButton extends React.PureComponent {
   static propTypes = {
-    rootNavigation: PropTypes.object.isRequired
+    rootNavigation: CustomPropTypes.navigation.isRequired
   }
 
   onPress = () => {

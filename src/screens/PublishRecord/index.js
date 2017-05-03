@@ -1,4 +1,3 @@
-import React, { PropTypes } from 'react';
 import { TabNavigator, TabBarTop } from 'react-navigation';
 import PublishExpenditureRecord from './PublishExpenditureRecord';
 import PublishIncomeRecord from './PublishIncomeRecord';

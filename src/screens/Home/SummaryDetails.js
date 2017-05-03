@@ -4,6 +4,7 @@ import { View, TouchableHighlight, StyleSheet } from 'react-native';
 import BaseText from '../../components/BaseText';
 import FakeIcon from '../../components/FakeIcon';
 import { getDayPeriod, getWeekPeriod, getMonthPeriod, getYearPeriod } from '../../utils/period';
+import CustomPropTypes from '../../lib/CustomPropTypes';
 
 const styles = StyleSheet.create({
   detailRow: {
@@ -83,7 +84,7 @@ class DetailRow extends React.PureComponent {
 
 export default class SummaryDetails extends React.PureComponent {
   static propTypes = {
-    navigation: PropTypes.object.isRequired
+    navigation: CustomPropTypes.navigation.isRequired
   }
 
   jumpToTodayRecords = () => {

@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
 
 import SummaryHeader from './SummaryHeader';
@@ -6,6 +6,7 @@ import WriteOneButton from './WriteOneButton';
 import SummaryDetails from './SummaryDetails';
 import HomeTabbar from './HomeTabbar';
 import { Geometries } from '../../variables';
+import CustomPropTypes from '../../lib/CustomPropTypes';
 
 const styles = StyleSheet.create({
   homeContainer: {
@@ -19,7 +20,7 @@ const styles = StyleSheet.create({
 
 export default class Home extends React.PureComponent {
   static propTypes = {
-    navigation: PropTypes.object.isRequired
+    navigation: CustomPropTypes.navigation.isRequired
   }
 
   static navigationOptions = {

@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react';
 import { TouchableHighlight, Text, StyleSheet } from 'react-native';
 
 import { baseTextStyle } from './BaseText';
+import CustomPropTypes from '../lib/CustomPropTypes';
 
 const styles = StyleSheet.create({
   container: {
@@ -32,7 +33,7 @@ const styles = StyleSheet.create({
 export default class Button extends React.PureComponent {
   static propTypes = {
     onPress: PropTypes.func,
-    containerStyle: PropTypes.any,
+    containerStyle: CustomPropTypes.style,
     type: PropTypes.string,
     children: PropTypes.node
   }

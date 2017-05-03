@@ -9,32 +9,32 @@ import EnumRecordType from '../../enums/EnumRecordType';
 import { Colors } from '../../variables';
 import utils from '../../utils';
 
-const TYPE_DAY = 'day';
-const TYPE_WEEK = 'week';
-const TYPE_MONTH = 'month';
-const TYPE_YEAR = 'year';
+// const TYPE_DAY = 'day';
+// const TYPE_WEEK = 'week';
+// const TYPE_MONTH = 'month';
+// const TYPE_YEAR = 'year';
 
-const INTERAL_DAY = 24 * 60 * 60 * 1000;
-const MAX_INTERAL_WEEK = (8 * INTERAL_DAY) - 1;
-const MAX_INTERVAL_MONTH = 31 * INTERAL_DAY;
-const MAX_INTERVAL_YEAR = 366 * INTERAL_DAY;
+// const INTERAL_DAY = 24 * 60 * 60 * 1000;
+// const MAX_INTERAL_WEEK = (8 * INTERAL_DAY) - 1;
+// const MAX_INTERVAL_MONTH = 31 * INTERAL_DAY;
+// const MAX_INTERVAL_YEAR = 366 * INTERAL_DAY;
 
-function getType(startTime, endTime) {
-  const interval = endTime - startTime;
-  if (interval < 0) {
-    return null;
-  } else if (interval < INTERAL_DAY) {
-    return TYPE_DAY;
-  } else if (interval < MAX_INTERAL_WEEK) {
-    return TYPE_WEEK;
-  } else if (interval < MAX_INTERVAL_MONTH) {
-    return TYPE_MONTH;
-  } else if (interval < MAX_INTERVAL_YEAR) {
-    return TYPE_YEAR;
-  } else {
-    return null;
-  }
-}
+// function getType(startTime, endTime) {
+//   const interval = endTime - startTime;
+//   if (interval < 0) {
+//     return null;
+//   } else if (interval < INTERAL_DAY) {
+//     return TYPE_DAY;
+//   } else if (interval < MAX_INTERAL_WEEK) {
+//     return TYPE_WEEK;
+//   } else if (interval < MAX_INTERVAL_MONTH) {
+//     return TYPE_MONTH;
+//   } else if (interval < MAX_INTERVAL_YEAR) {
+//     return TYPE_YEAR;
+//   } else {
+//     return null;
+//   }
+// }
 
 function calculateSummary(records) {
   let expenditure = 0;
@@ -46,6 +46,8 @@ function calculateSummary(records) {
         break;
       case EnumRecordType.Income:
         income += record.amount;
+        break;
+      default:
         break;
     }
   });

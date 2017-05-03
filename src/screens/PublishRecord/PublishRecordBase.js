@@ -11,6 +11,7 @@ import { editorStyles } from './editorParts/editorCommon';
 import { getDayPeriod } from '../../utils/period';
 import { Colors } from '../../variables';
 import EnumRecordType from '../../enums/EnumRecordType';
+import CustomPropTypes from '../../lib/CustomPropTypes';
 
 const styles = StyleSheet.create({
   amountInput: {
@@ -23,17 +24,12 @@ export function mapDBsToProps(dbs) {
     dbs.accounts.allDocsData(),
     dbs.categories.allDocsData()
   ])
-    .then(([accounts, categories]) => {
-      return {
-        accounts: accounts,
-        categories: categories
-      };
-    });
+    .then(([accounts, categories]) => ({ accounts, categories }));
 }
 
 export default class PublishRecordBase extends React.PureComponent {
   static propTypes = {
-    rootNavigation: PropTypes.object.isRequired,
+    rootNavigation: CustomPropTypes.rootNavigation.isRequired,
     databases: PropTypes.object,
     accounts: PropTypes.array,
     categories: PropTypes.array
@@ -125,8 +121,10 @@ export default class PublishRecordBase extends React.PureComponent {
         <AccountSelector {...cmProps} accounts={accounts} />
         <DateSelector {...cmProps} />
         <RemarkInput {...cmProps} />
-        <EditorButtonBar containerStyle={editorStyles.buttonBar}
-          onSavePress={this.onSave} onPublishAgainPress={this.onPublishAgain} />
+        <EditorButtonBar
+          containerStyle={editorStyles.buttonBar}
+          onSavePress={this.onSave} onPublishAgainPress={this.onPublishAgain}
+        />
       </View>
     );
   }

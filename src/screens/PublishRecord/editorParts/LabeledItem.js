@@ -4,6 +4,7 @@ import { TouchableHighlight, View, StyleSheet } from 'react-native';
 import BaseText from '../../../components/BaseText';
 import { editorStyles } from './editorCommon';
 import { Colors } from '../../../variables';
+import CustomPropTypes from '../../../lib/CustomPropTypes';
 
 const styles = StyleSheet.create({
   container: {
@@ -25,7 +26,7 @@ const styles = StyleSheet.create({
 export default class LabeledItem extends React.PureComponent {
   static propTypes = {
     onPress: PropTypes.func,
-    containerStyle: PropTypes.any,
+    containerStyle: CustomPropTypes.style,
     tip: PropTypes.string.isRequired,
     text: PropTypes.node,
     modal: PropTypes.node

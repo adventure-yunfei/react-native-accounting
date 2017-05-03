@@ -4,9 +4,9 @@ export default {
   },
 
   arrayToMap(arr, keyField) {
-    return arr.reduce((result, item) => {
-      result[item[keyField]] = item;
-      return result;
+    return arr.reduce((acc, item) => {
+      acc[item[keyField]] = item;
+      return acc;
     }, {});
   }
 };

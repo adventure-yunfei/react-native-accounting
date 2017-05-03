@@ -3,6 +3,7 @@ import { View, TextInput, StyleSheet } from 'react-native';
 import isDecimal from 'validator/lib/isDecimal';
 
 import { editorStyles } from './editorCommon';
+import CustomPropTypes from '../../../lib/CustomPropTypes';
 
 export const PropKeyAmount = 'amount';
 
@@ -17,7 +18,7 @@ export default class AmountInput extends React.PureComponent {
   static propTypes = {
     onPropChange: PropTypes.func.isRequired,
     data: PropTypes.object.isRequired,
-    textStyle: PropTypes.any
+    textStyle: CustomPropTypes.style
   }
 
   static defaultProps = {
@@ -48,7 +49,8 @@ export default class AmountInput extends React.PureComponent {
       <View style={editorStyles.row}>
         <TextInput
           onChangeText={this.onChangeText} style={[styles.component, textStyle]}
-          value={inputValue} onBlur={this.onBlur} />
+          value={inputValue} onBlur={this.onBlur}
+        />
       </View>
     );
   }

@@ -10,7 +10,8 @@ export const PropKeyCatId = 'categoryId';
 export default class CategorySelector extends React.PureComponent {
   static propTypes = {
     onPropChange: PropTypes.func.isRequired,
-    categories: PropTypes.array.isRequired
+    categories: PropTypes.array.isRequired,
+    data: PropTypes.object.isRequired
   }
 
   componentWillMount() {

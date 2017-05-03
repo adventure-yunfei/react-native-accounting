@@ -8,7 +8,7 @@ function getReadOnlyDBs() {
   const result = {
     __dataCalls: [] // Record fetch data calls
   };
-  for (const name in databases) {
+  Object.keys(databases).forEach((name) => {
     const db = databases[name];
     result[name] = {
       get(...args) {
@@ -24,12 +24,12 @@ function getReadOnlyDBs() {
         return db.allDocsData(...args);
       }
     };
-  }
+  });
   return result;
 }
 
 function listenToDBChanges(dataCalls, callback) {
-  const unlistens = dataCalls.map(([dbName, method, ...args]) => {
+  const unlistens = dataCalls.map(([dbName/* , method, ...args */]) => {
     let change = dbChanges[dbName];
     if (!change) {
       change = databases[dbName].changes({
@@ -63,7 +63,9 @@ export default function connectDB(mapDBsToProps) {
           mapDBsToProps(dbs, this.props)
             .then((data) => {
               if (this.__mounted && dbs === this.__readOnlyDBs) {
-                this.__unlistenDBChanges && this.__unlistenDBChanges();
+                if (this.__unlistenDBChanges) {
+                  this.__unlistenDBChanges();
+                }
                 this.__unlistenDBChanges = listenToDBChanges(dbs.__dataCalls, doMapDBs);
                 // listenToDBChanges(dbs.__dataCalls, () => doMapDBs());
                 this.setState(data);
@@ -75,7 +77,9 @@ export default function connectDB(mapDBsToProps) {
 
       componentWillUnmount() {
         this.__mounted = false;
-        this.__unlistenDBChanges && this.__unlistenDBChanges();
+        if (this.__unlistenDBChanges) {
+          this.__unlistenDBChanges();
+        }
       }
 
       render() {

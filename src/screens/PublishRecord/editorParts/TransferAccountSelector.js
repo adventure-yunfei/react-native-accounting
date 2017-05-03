@@ -55,14 +55,14 @@ export default class TransferAccountSelector extends React.PureComponent {
 
   prepareAccountsData(accounts) {
     this.setState({
-      availableAccounts: accounts.reduce((result, account) => {
+      availableAccounts: accounts.reduce((acc, account) => {
         if (account.parentId) {
-          result.push({
+          acc.push({
             value: account._id,
             label: account.name
           });
         }
-        return result;
+        return acc;
       }, [])
     });
   }

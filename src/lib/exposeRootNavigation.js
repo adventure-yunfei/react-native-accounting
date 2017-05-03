@@ -1,6 +1,8 @@
 import React, { PropTypes } from 'react';
 import { NavigationActions } from 'react-navigation';
 
+import CustomPropTypes from './CustomPropTypes';
+
 export default function exposeRootNavigation(BaseComponent) {
   class ExposeRootNavigationWrapper extends React.PureComponent {
     static contextTypes = {
@@ -19,7 +21,7 @@ export function provideRootNavigationContext(BaseComponent) {
   class ProvideRootNavigationContextWrapper extends BaseComponent {
     static propTypes = {
       ...BaseComponent.propTypes,
-      navigation: PropTypes.object.isRequired
+      navigation: CustomPropTypes.navigation.isRequired
     }
 
     static childContextTypes = {
@@ -30,11 +32,11 @@ export function provideRootNavigationContext(BaseComponent) {
       const rootNavigation = this.props.navigation;
       rootNavigation.$navigateByPath = function $navigateByPath(path, params) {
         const routeNames = path.split('/');
-        const action = routeNames.reduceRight((result, routeName) => {
+        const action = routeNames.reduceRight((acc, routeName) => {
           return NavigationActions.navigate({
             routeName,
             params,
-            action: result
+            action: acc
           });
         }, undefined);
 
