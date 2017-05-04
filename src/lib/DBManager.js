@@ -2,6 +2,25 @@ import forEach from 'lodash/forEach';
 import PouchDB from 'pouchdb-react-native';
 
 class ExtendedPouchDB extends PouchDB {
+  constructor({ generateID, ...options }, ...args) {
+    super(options, ...args);
+    if (generateID) {
+      if (typeof generateID === 'function') {
+        this.generateID = generateID;
+      } else if (typeof generateID === 'string') {
+        this.generateID = doc => doc[generateID];
+      } else if (Array.isArray(generateID) && generateID.every(item => typeof item === 'string' || typeof item === 'function')) {
+        this.generateID = (doc) => {
+          return generateID
+            .map(item => (typeof item === 'function' ? item(doc) : doc[item]))
+            .join('/');
+        };
+      }
+    }
+  }
+  generateID() {
+    throw new Error('Not initialized!');
+  }
   allDocsData(options = {}) {
     return this.allDocs({
       ...options,
@@ -35,11 +54,12 @@ export default class DBManager {
     this._remoteCouchdbHost = remoteCouchdbHost;
   }
 
-  createDatabase({ name, schema, views, ...opts }) {
+  createDatabase({ name, schema, generateID = null, views = null, options = {} }) {
     const actualDBName = this._prefix + name;
     const db = new ExtendedPouchDB({
       name: actualDBName,
-      ...opts
+      generateID,
+      ...options
     });
     if (this._remoteCouchdbHost) {
       PouchDB.sync(actualDBName, this._remoteCouchdbHost + actualDBName, {

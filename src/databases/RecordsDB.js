@@ -1,8 +1,11 @@
+import shortid from 'shortid';
 import FakeSchema from '../lib/FakeSchema';
 import dbManager from './dbManager';
 
 dbManager.createDatabase({
   name: 'records',
+
+  generateID: ['timestamp', shortid],
 
   schema: new FakeSchema({
     type: 'number',

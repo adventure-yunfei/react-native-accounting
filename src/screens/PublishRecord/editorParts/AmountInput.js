@@ -7,6 +7,11 @@ import CustomPropTypes from '../../../lib/CustomPropTypes';
 
 export const PropKeyAmount = 'amount';
 
+function to2FixedNumber(str) {
+  const num = parseFloat(str);
+  return Math.floor(num * 100) / 100;
+}
+
 const styles = StyleSheet.create({
   component: {
     height: 70,
@@ -31,12 +36,17 @@ export default class AmountInput extends React.PureComponent {
     });
   }
 
-  onChangeText = text => this.setState({ inputValue: text });
+  onChangeText = (text) => {
+    this.setState({ inputValue: text });
+    if (isDecimal(text)) {
+      this.props.onPropChange(PropKeyAmount, to2FixedNumber(text));
+    }
+  }
 
   onBlur = () => {
     const { inputValue } = this.state;
     if (isDecimal(inputValue)) {
-      this.props.onPropChange(PropKeyAmount, parseFloat(inputValue));
+      this.props.onPropChange(PropKeyAmount, to2FixedNumber(inputValue));
     } else {
       this.setState({ inputValue: this.props.data[PropKeyAmount].toFixed(2) });
     }

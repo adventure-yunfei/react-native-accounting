@@ -87,7 +87,11 @@ export default class PublishRecordBase extends React.PureComponent {
 
   onSave = () => {
     const { databases, rootNavigation } = this.props;
-    databases.records.post(this.state.data)
+    const { data } = this.state;
+    databases.records.put({
+      _id: databases.records.generateID(data),
+      ...data
+    })
       .then(() => rootNavigation.navigate('Records', getDayPeriod()));
   }
 
