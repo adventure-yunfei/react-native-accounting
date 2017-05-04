@@ -1,12 +1,12 @@
 import React, { PropTypes } from 'react';
-import { View, ScrollView, Text, StyleSheet } from 'react-native';
+import { View, ScrollView, StyleSheet } from 'react-native';
 
 import BaseText from '../../components/BaseText';
 import FakeIcon from '../../components/FakeIcon';
 import AccountsSummary from './AccountsSummary';
 import flatToTree from '../../utils/flatToTree';
 import connectDB from '../../lib/connectDB';
-import { componentPropsWillChange } from '../../lib/lifecycle';
+import { componentWillApplyProps } from '../../lib/lifecycle';
 import { Colors } from '../../variables';
 
 const styles = StyleSheet.create({
@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
 
 @connectDB(dbs => dbs.accounts.allDocsData()
   .then(accounts => ({ accounts })))
-@componentPropsWillChange
+@componentWillApplyProps
 export default class Accounts extends React.PureComponent {
   static navigationOptions = {
     title: '账户'
@@ -87,7 +87,7 @@ export default class Accounts extends React.PureComponent {
     accountGroups: []
   }
 
-  componentPropsWillChange(prevProps = {}, nextProps) {
+  componentWillApplyProps(prevProps = {}, nextProps) {
     if (nextProps.accounts && prevProps.accounts !== nextProps.accounts) {
       const accountGroups = flatToTree(nextProps.accounts);
       let netAssets = 0;

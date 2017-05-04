@@ -51,11 +51,16 @@ export default class HomeTabbar extends React.PureComponent {
     this.props.rootNavigation.$navigateByPath('Accounts');
   }
 
+  toChartScreen = () => {
+    this.props.rootNavigation.$navigateByPath('Chart');
+  }
+
   render() {
     return (
       <Tabbar height={Geometries.Tabbar}>
         <View style={styles.tabbarContainer}>
           <TabbarItem iconName="credit-card" label="账户" onPress={this.toAccountsScreen} />
+          <TabbarItem iconName="credit-card" label="图表" onPress={this.toChartScreen} />
         </View>
       </Tabbar>
     );

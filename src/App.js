@@ -5,6 +5,7 @@ import Home from './screens/Home';
 import AccountsScreen from './screens/AccountsScreen';
 import Records from './screens/Records';
 import PublishRecord from './screens/PublishRecord';
+import ChartScreen from './screens/ChartScreen';
 import { provideRootNavigationContext } from './lib/exposeRootNavigation';
 
 const App = StackNavigator(
@@ -23,12 +24,16 @@ const App = StackNavigator(
 
     PublishRecord: {
       screen: provideRootNavigationContext(PublishRecord)
+    },
+
+    Chart: {
+      screen: ChartScreen
     }
   },
 
   {
     headerMode: 'screen',
-    initialRouteName: 'Accounts',
+    initialRouteName: 'Home',
     // initialRouteParams: {
     //   startTime: Date.now() - (7 * 24 * 60 * 60 * 1000),
     //   endTime: Date.now()

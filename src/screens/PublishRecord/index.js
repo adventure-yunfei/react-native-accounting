@@ -34,6 +34,7 @@ export default TabNavigator(
   },
 
   {
+    lazy: true,
     backBehavior: 'none',
     tabBarComponent: TabBarTop,
     tabBarPosition: 'top',
