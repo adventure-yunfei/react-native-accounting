@@ -1,5 +1,8 @@
 import forEach from 'lodash/forEach';
 import PouchDB from 'pouchdb-react-native';
+import pouchdbFind from 'pouchdb-find';
+
+PouchDB.plugin(pouchdbFind);
 
 class ExtendedPouchDB extends PouchDB {
   constructor(options, ...args) {
@@ -39,7 +42,9 @@ export default class DBManager {
         [name]: viewCfg
       }
     };
-    return db.put(viewDesignDoc)
+    // TODO: 非常奇怪的行为，添加 pouchdb-find 插件并使用 .find 后，创建 design doc 必须变成异步才会成功
+    return new Promise(resolve => setTimeout(resolve))
+      .then(() => db.put(viewDesignDoc))
       .catch((err) => {
         if (err.name !== 'conflict') {
           throw err;

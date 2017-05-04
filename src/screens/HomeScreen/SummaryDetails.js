@@ -5,6 +5,7 @@ import BaseText from '../../components/BaseText';
 import FakeIcon from '../../components/FakeIcon';
 import { getDayPeriod, getWeekPeriod, getMonthPeriod, getYearPeriod } from '../../utils/period';
 import CustomPropTypes from '../../lib/CustomPropTypes';
+import { Colors } from '../../variables';
 
 const styles = StyleSheet.create({
   detailRow: {
@@ -37,10 +38,10 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end'
   },
   incomeAmount: {
-    color: 'rgb(20,186,137)'
+    color: Colors.Income
   },
   expenditureAmount: {
-    color: 'rgb(243,107,100)'
+    color: Colors.Expenditure
   },
   rightArrowIconContainer: {
     marginLeft: 3
@@ -82,9 +83,21 @@ class DetailRow extends React.PureComponent {
   }
 }
 
+const PeriodSummaryType = PropTypes.shape({
+  income: PropTypes.number.isRequired,
+  expenditure: PropTypes.number.isRequired,
+});
+
 export default class SummaryDetails extends React.PureComponent {
   static propTypes = {
-    navigation: CustomPropTypes.navigation.isRequired
+    navigation: CustomPropTypes.navigation.isRequired,
+    daySummary: PeriodSummaryType.isRequired,
+    weekSummary: PeriodSummaryType.isRequired,
+    monthSummary: PeriodSummaryType.isRequired,
+    yearSummary: PeriodSummaryType.isRequired
+  }
+  static propTypes = {
+    navigation: CustomPropTypes.navigation.isRequired,
   }
 
   jumpToTodayRecords = () => {
@@ -100,14 +113,23 @@ export default class SummaryDetails extends React.PureComponent {
     this.props.navigation.navigate('Records', getYearPeriod());
   }
 
-
   render() {
+    const {
+      daySummary,
+      weekSummary,
+      monthSummary,
+      yearSummary
+    } = this.props;
+    const weekPeriod = getWeekPeriod();
+    const monthPeriod = getMonthPeriod();
+    const yearSubtitle = `${(new Date(Date.now)).getFullYear()}年`;
+
     return (
       <View>
-        <DetailRow onPress={this.jumpToTodayRecords} icon="date-range" title="今天" subtitle="还没有记账" income={0} expenditure={0} />
-        <DetailRow onPress={this.jumpToWeekRecords} icon="date-range" title="本周" subtitle="4月1日 - 4月7日" income={0} expenditure={0} />
-        <DetailRow onPress={this.jumpToMonthRecords} icon="date-range" title="4月" subtitle="4月1日 - 4月30日" income={0} expenditure={0} />
-        <DetailRow onPress={this.jumpToYearRecords} icon="date-range" title="本年" subtitle="2017年" income={0} expenditure={0} />
+        <DetailRow onPress={this.jumpToTodayRecords} icon="date-range" title="今天" subtitle="还没有记账" {...daySummary} />
+        <DetailRow onPress={this.jumpToWeekRecords} icon="date-range" title="本周" subtitle="4月1日 - 4月7日" {...weekSummary} />
+        <DetailRow onPress={this.jumpToMonthRecords} icon="date-range" title="4月" subtitle="4月1日 - 4月30日" {...monthSummary} />
+        <DetailRow onPress={this.jumpToYearRecords} icon="date-range" title="本年" subtitle={yearSubtitle} {...yearSummary} />
       </View>
     );
   }

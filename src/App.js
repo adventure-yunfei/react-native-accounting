@@ -1,7 +1,7 @@
 import { StackNavigator } from 'react-navigation';
 
 import './setupApp';
-import Home from './screens/Home';
+import HomeScreen from './screens/HomeScreen';
 import AccountsScreen from './screens/AccountsScreen';
 import Records from './screens/Records';
 import PublishRecord from './screens/PublishRecord';
@@ -11,7 +11,7 @@ import { provideRootNavigationContext } from './lib/exposeRootNavigation';
 const App = StackNavigator(
   {
     Home: {
-      screen: provideRootNavigationContext(Home),
+      screen: provideRootNavigationContext(HomeScreen),
     },
 
     Records: {

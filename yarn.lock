@@ -3699,6 +3699,17 @@ pouchdb-errors@6.2.0:
   dependencies:
     inherits "2.0.3"
 
+pouchdb-find@^6.2.0:
+  version "6.2.0"
+  resolved "http://registry.npm.taobao.org/pouchdb-find/download/pouchdb-find-6.2.0.tgz#a824e158e25b0816614d67e680a4d8c8a694fa1e"
+  dependencies:
+    pouchdb-abstract-mapreduce "6.2.0"
+    pouchdb-collate "6.2.0"
+    pouchdb-md5 "6.2.0"
+    pouchdb-promise "6.2.0"
+    pouchdb-selector-core "6.2.0"
+    pouchdb-utils "6.2.0"
+
 pouchdb-generate-replication-id@6.2.0:
   version "6.2.0"
   resolved "http://registry.npm.taobao.org/pouchdb-generate-replication-id/download/pouchdb-generate-replication-id-6.2.0.tgz#e18b4ccbbaf4b74b48b0abced0ba089c15285c9c"

@@ -1,9 +1,11 @@
 import React from 'react';
 import hoistNonReactStatic from 'hoist-non-react-statics';
+import omit from 'lodash/omit';
 
 import databases from '../databases';
 
 const dbChanges = {};
+const KeyNoListenChanges = '$noListenChanges';
 
 class ReadOnlyDB {
   constructor(db, dbName, dataCalls) {
@@ -30,6 +32,9 @@ class ReadOnlyDB {
   }
   query(...args) {
     return this._onDataCall('query', args);
+  }
+  find(...args) {
+    return this._onDataCall('find', args);
   }
 }
 
@@ -74,15 +79,16 @@ export default function connectDB(mapDBsToProps) {
         this.__mounted = true;
         const doMapDBs = () => {
           const dbs = getReadOnlyDBs();
-          this.__readOnlyDBs = dbs;
+          this.__processingDBs = dbs;
           mapDBsToProps(dbs, this.props)
             .then((data) => {
-              if (this.__mounted && dbs === this.__readOnlyDBs) {
+              if (this.__mounted && dbs === this.__processingDBs) {
                 if (this.__unlistenDBChanges) {
                   this.__unlistenDBChanges();
                 }
-                this.__unlistenDBChanges = listenToDBChanges(dbs.__dataCalls, doMapDBs);
-                this.setState(data);
+                this.__unlistenDBChanges = data[KeyNoListenChanges] ?
+                  null : listenToDBChanges(dbs.__dataCalls, doMapDBs);
+                this.setState(omit(data, [KeyNoListenChanges]));
               }
             });
         };
