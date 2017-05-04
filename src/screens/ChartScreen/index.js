@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import { TabNavigator, TabBarTop } from 'react-navigation';
 import map from 'lodash/map';
+import sortBy from 'lodash/sortBy';
 
 import connectDB from '../../lib/connectDB';
 import ChartView from './ChartView';
@@ -76,31 +77,20 @@ class IncomeByCategoriesChart extends React.PureComponent {
   }
 }
 
-@connectDB((dbs) => {
-  const { startTime, endTime } = getMonthPeriod();
-  return Promise.all([
-    dbs.records.allDocsData()
-      .then(records =>
-        records.filter(({ timestamp }) => startTime <= timestamp && timestamp <= endTime)),
-    dbs.accounts.allDocsData()
-  ]).then(([records, accounts]) => {
-    const accountMap = utils.arrayToMap(accounts, '_id');
-    const accountAmountMap = {};
-    records.forEach(({ accountId, amount }) => {
-      if (accountMap[accountId] && amount) {
-        accountAmountMap[accountId] = (accountAmountMap[accountId] || 0) + amount;
-      }
-    });
-    const chartData = map(accountAmountMap, (amount, accountId) => {
-      return {
-        value: amount,
-        label: accountMap[accountId].name
-      };
-    })
-      .sort((a, b) => b.value - a.value);
-    return { chartData };
-  });
-})
+@connectDB(dbs => Promise.all([
+  dbs.records.query('amountGroupByAccounts', { group: true }),
+  dbs.accounts.allDocsData()
+]).then(([accountAmountsRes, accounts]) => {
+  const accountNameMap = utils.arrayToMap(accounts, '_id', 'name');
+  const chartData = sortBy(
+    accountAmountsRes.rows.filter(({ value }) => value),
+    'value'
+  ).map(({ key, value }) => ({
+    value,
+    label: accountNameMap[key]
+  }));
+  return { chartData };
+}))
 class AccountAssetsChart extends React.PureComponent {
   static propTypes = {
     chartData: PropTypes.array

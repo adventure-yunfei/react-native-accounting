@@ -5,8 +5,8 @@ import BaseText from '../../components/BaseText';
 import FakeIcon from '../../components/FakeIcon';
 import AccountsSummary from './AccountsSummary';
 import flatToTree from '../../utils/flatToTree';
+import utils from '../../utils';
 import connectDB from '../../lib/connectDB';
-import { componentWillApplyProps } from '../../lib/lifecycle';
 import { Colors } from '../../variables';
 
 const styles = StyleSheet.create({
@@ -70,38 +70,30 @@ const styles = StyleSheet.create({
   }
 });
 
-@connectDB(dbs => dbs.accounts.allDocsData()
-  .then(accounts => ({ accounts })))
-@componentWillApplyProps
+@connectDB(dbs => Promise.all([
+  dbs.accounts.allDocsData(),
+  dbs.records.query('amountGroupByAccounts', { group: true })
+]).then(([accounts, accountAmountsRes]) => {
+  let netAssets = 0;
+  const amountMap = utils.arrayToMap(accountAmountsRes.rows, 'key', 'value');
+  const accountDetailGroups = flatToTree(accounts, account => ({
+    ...account,
+    amount: amountMap[account._id] || 0
+  }));
+  accountDetailGroups.forEach((group) => {
+    group.amount = group.children.reduce((acc, { amount }) => acc + amount, 0);
+    netAssets += group.amount;
+  });
+  return { accountDetailGroups, netAssets };
+}))
 export default class Accounts extends React.PureComponent {
   static navigationOptions = {
     title: '账户'
   }
 
   static propTypes = {
-    accounts: PropTypes.array
-  }
-
-  state = {
-    netAssets: 0,
-    accountGroups: []
-  }
-
-  componentWillApplyProps(prevProps = {}, nextProps) {
-    if (nextProps.accounts && prevProps.accounts !== nextProps.accounts) {
-      const accountGroups = flatToTree(nextProps.accounts);
-      let netAssets = 0;
-      accountGroups.forEach((accountGrp) => {
-        accountGrp.amount =
-          accountGrp.children.reduce((acc, account) => acc + account.amount, 0);
-        netAssets += accountGrp.amount;
-      });
-
-      this.setState({
-        accountGroups,
-        netAssets
-      });
-    }
+    netAssets: PropTypes.number,
+    accountDetailGroups: PropTypes.array
   }
 
   renderAccountGroup(accountGrp) {
@@ -132,11 +124,11 @@ export default class Accounts extends React.PureComponent {
   }
 
   render() {
-    const { netAssets, accountGroups } = this.state;
+    const { netAssets = 0, accountDetailGroups = [] } = this.props;
     return (
       <ScrollView style={styles.container}>
         <AccountsSummary netAssets={netAssets} />
-        {accountGroups.map(this.renderAccountGroup, this)}
+        {accountDetailGroups.map(this.renderAccountGroup, this)}
       </ScrollView>
     );
   }

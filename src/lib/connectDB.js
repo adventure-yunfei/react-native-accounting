@@ -5,26 +5,40 @@ import databases from '../databases';
 
 const dbChanges = {};
 
+class ReadOnlyDB {
+  constructor(db, dbName, dataCalls) {
+    this._db = db;
+    this._dbName = dbName;
+    this._dataCalls = dataCalls;
+  }
+  _onDataCall(method, args) {
+    this._dataCalls.push([
+      this._dbName,
+      method,
+      args
+    ]);
+    return this._db[method](...args);
+  }
+  get(...args) {
+    return this._onDataCall('get', args);
+  }
+  allDocs(...args) {
+    return this._onDataCall('allDocs', args);
+  }
+  allDocsData(...args) {
+    return this._onDataCall('allDocsData', args);
+  }
+  query(...args) {
+    return this._onDataCall('query', args);
+  }
+}
+
 function getReadOnlyDBs() {
   const result = {
     __dataCalls: [] // Record fetch data calls
   };
   Object.keys(databases).forEach((name) => {
-    const db = databases[name];
-    result[name] = {
-      get(...args) {
-        result.__dataCalls.push([name, 'get', ...args]);
-        return db.get(...args);
-      },
-      allDocs(...args) {
-        result.__dataCalls.push([name, 'allDocs', ...args]);
-        return db.allDocs(...args);
-      },
-      allDocsData(...args) {
-        result.__dataCalls.push([name, 'allDocsData', ...args]);
-        return db.allDocsData(...args);
-      }
-    };
+    result[name] = new ReadOnlyDB(databases[name], name, result.__dataCalls);
   });
   return result;
 }
@@ -68,7 +82,6 @@ export default function connectDB(mapDBsToProps) {
                   this.__unlistenDBChanges();
                 }
                 this.__unlistenDBChanges = listenToDBChanges(dbs.__dataCalls, doMapDBs);
-                // listenToDBChanges(dbs.__dataCalls, () => doMapDBs());
                 this.setState(data);
               }
             });
