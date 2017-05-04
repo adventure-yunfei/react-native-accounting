@@ -12,9 +12,11 @@ import { Colors } from '../../variables';
 @connectDB((dbs) => {
   const { startTime, endTime } = getMonthPeriod();
   return Promise.all([
-    dbs.records.allDocsData()
-      .then(records =>
-        records.filter(({ timestamp }) => startTime <= timestamp && timestamp <= endTime)),
+    dbs.records.allDocsData({
+      descending: true,
+      startkey: endTime.toString(),
+      endkey: startTime.toString()
+    }),
     dbs.categories.allDocsData()
   ]).then(([records, categories]) => {
     const catMap = utils.arrayToMap(categories, '_id');
@@ -46,9 +48,11 @@ class ExpenditureByCategoriesChart extends React.PureComponent {
 @connectDB((dbs) => {
   const { startTime, endTime } = getMonthPeriod();
   return Promise.all([
-    dbs.records.allDocsData()
-      .then(records =>
-        records.filter(({ timestamp }) => startTime <= timestamp && timestamp <= endTime)),
+    dbs.records.allDocsData({
+      descending: true,
+      startkey: endTime.toString(),
+      endkey: startTime.toString()
+    }),
     dbs.categories.allDocsData()
   ]).then(([records, categories]) => {
     const catMap = utils.arrayToMap(categories, '_id');

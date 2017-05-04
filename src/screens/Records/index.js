@@ -65,15 +65,18 @@ const styles = StyleSheet.create({
 });
 
 @connectDB((dbs, { navigation }) => {
+  const { state: { params: { startTime, endTime } } } = navigation;
   return Promise.all([
     dbs.categories.allDocsData(),
-    dbs.records.allDocsData()
+    dbs.records.allDocsData({
+      descending: true,
+      startkey: endTime.toString(),
+      endkey: startTime.toString()
+    })
   ]).then(([categories, records]) => {
-    const { state: { params: { startTime, endTime } } } = navigation;
     const catMap = utils.arrayToMap(categories, '_id');
     return {
       detailRecords: records
-        .filter(({ timestamp }) => startTime <= timestamp && timestamp <= endTime)
         .map(record => ({
           ...record,
           categoryName: catMap[record.categoryId].name
