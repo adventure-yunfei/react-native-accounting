@@ -2,8 +2,9 @@ import forEach from 'lodash/forEach';
 import PouchDB from 'pouchdb-react-native';
 
 class ExtendedPouchDB extends PouchDB {
-  constructor({ generateID, ...options }, ...args) {
+  constructor(options, ...args) {
     super(options, ...args);
+    const { generateID } = options || {};
     if (generateID) {
       if (typeof generateID === 'function') {
         this.generateID = generateID;
