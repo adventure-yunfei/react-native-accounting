@@ -1,23 +1,36 @@
 import shortid from 'shortid';
+import { compile, compileAnyOf, compileEnum } from 'immutable-json-schema';
 
-import FakeSchema from '../lib/FakeSchema';
 import dbManager from './dbManager';
 import EnumRecordType from '../enums/EnumRecordType';
+
+const commonRecordSrc = {
+  amount: 'number',
+  categoryId: 'string',
+  accountId: 'string',
+  timestamp: 'number',
+  remark: 'string',
+  __options: {
+    notRequired: ['remark']
+  }
+};
 
 dbManager.createDatabase({
   name: 'records',
 
   generateID: ['timestamp', shortid],
 
-  schema: new FakeSchema({
-    type: 'number',
-    amount: 'number',
-    categoryId: 'string',
-    accountId: 'string',
-    toAccountId: 'string', // 转账目标账户
-    timestamp: 'number',
-    remark: 'string'
-  }),
+  schema: compileAnyOf([
+    compile({
+      ...commonRecordSrc,
+      type: compileEnum([EnumRecordType.Expenditure, EnumRecordType.Income])
+    }),
+    compile({
+      ...commonRecordSrc,
+      type: compileEnum([EnumRecordType.Transfer]),
+      toAccountId: 'string' // 转账目标账户
+    })
+  ]),
 
   views: {
     amountGroupByAccounts: {

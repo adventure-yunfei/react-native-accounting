@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import { View, TouchableHighlight, StyleSheet } from 'react-native';
+import moment from 'moment';
 
 import BaseText from '../../components/BaseText';
 import FakeIcon from '../../components/FakeIcon';
@@ -63,7 +64,7 @@ class DetailRow extends React.PureComponent {
     return (
       <TouchableHighlight onPress={onPress}>
         <View style={styles.detailRow} >
-          <FakeIcon color="rgb(182,186,191)" name={icon} size={37} style={styles.detailRowMainIcon} />
+          <FakeIcon name={icon} size={37} containerStyle={styles.detailRowMainIcon} />
 
           <View style={styles.rightContentBox}>
             <View>
@@ -120,15 +121,16 @@ export default class SummaryDetails extends React.PureComponent {
       monthSummary,
       yearSummary
     } = this.props;
-    const weekPeriod = getWeekPeriod();
-    const monthPeriod = getMonthPeriod();
-    const yearSubtitle = `${(new Date(Date.now)).getFullYear()}年`;
+    const formatPeriod = period => `${moment(period.startTime).format('M月D日')} - ${moment(period.endTime).format('M月D日')}`;
+    const weekSubtitle = formatPeriod(getWeekPeriod());
+    const monthSubtitle = formatPeriod(getMonthPeriod());
+    const yearSubtitle = `${(new Date(Date.now())).getFullYear()}年`;
 
     return (
       <View>
-        <DetailRow onPress={this.jumpToTodayRecords} icon="date-range" title="今天" subtitle="还没有记账" {...daySummary} />
-        <DetailRow onPress={this.jumpToWeekRecords} icon="date-range" title="本周" subtitle="4月1日 - 4月7日" {...weekSummary} />
-        <DetailRow onPress={this.jumpToMonthRecords} icon="date-range" title="4月" subtitle="4月1日 - 4月30日" {...monthSummary} />
+        <DetailRow onPress={this.jumpToTodayRecords} icon="date-range" title="今天" subtitle="" {...daySummary} />
+        <DetailRow onPress={this.jumpToWeekRecords} icon="date-range" title="本周" subtitle={weekSubtitle} {...weekSummary} />
+        <DetailRow onPress={this.jumpToMonthRecords} icon="date-range" title="4月" subtitle={monthSubtitle} {...monthSummary} />
         <DetailRow onPress={this.jumpToYearRecords} icon="date-range" title="本年" subtitle={yearSubtitle} {...yearSummary} />
       </View>
     );

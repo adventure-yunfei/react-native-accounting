@@ -7,6 +7,7 @@ import Records from './screens/Records';
 import PublishRecord from './screens/PublishRecord';
 import ChartScreen from './screens/ChartScreen';
 import { provideRootNavigationContext } from './lib/exposeRootNavigation';
+import './shell';
 
 const App = StackNavigator(
   {

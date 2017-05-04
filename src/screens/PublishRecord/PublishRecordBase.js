@@ -88,7 +88,7 @@ export default class PublishRecordBase extends React.PureComponent {
   onSave = () => {
     const { databases, rootNavigation } = this.props;
     const { data } = this.state;
-    databases.records.put({
+    databases.records.validatingPut({
       _id: databases.records.generateID(data),
       ...data
     })

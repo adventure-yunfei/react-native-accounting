@@ -1,10 +1,15 @@
-import FakeSchema from '../lib/FakeSchema';
+import { compile } from 'immutable-json-schema';
+
 import dbManager from './dbManager';
 
 dbManager.createDatabase({
   name: 'categories',
-  schema: new FakeSchema({
+  schema: compile({
     name: 'string',
-    parentId: 'string'
+    parentId: 'string',
+    type: 'number',
+    __options: {
+      notRequired: ['parentId']
+    }
   })
 });

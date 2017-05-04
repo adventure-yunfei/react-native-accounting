@@ -1,13 +1,17 @@
 import forEach from 'lodash/forEach';
 import PouchDB from 'pouchdb-react-native';
 import pouchdbFind from 'pouchdb-find';
+import { compile, validate } from 'immutable-json-schema';
+import shortid from 'shortid';
 
 PouchDB.plugin(pouchdbFind);
 
+const isNotDDoc = doc => doc._id && doc._id.startsWith('_design');
+
 class ExtendedPouchDB extends PouchDB {
-  constructor(options, ...args) {
-    super(options, ...args);
-    const { generateID } = options || {};
+  initExtendedOpts({ schema, generateID = null } = {}) {
+    this.$schema = schema;
+    this.$bulkSchema = compile([schema]);
     if (generateID) {
       if (typeof generateID === 'function') {
         this.generateID = generateID;
@@ -23,7 +27,7 @@ class ExtendedPouchDB extends PouchDB {
     }
   }
   generateID() {
-    throw new Error('Not initialized!');
+    return [shortid(), shortid(), shortid()].join('-');
   }
   allDocsData(options = {}) {
     return this.allDocs({
@@ -31,6 +35,24 @@ class ExtendedPouchDB extends PouchDB {
       include_docs: true
     })
       .then(result => result.rows.map(item => item.doc));
+  }
+  validatingPut(doc, ...args) {
+    return Promise.resolve(isNotDDoc(doc) ? validate(this.$schema, doc) : null)
+      .then((errMsg) => {
+        if (errMsg) {
+          return Promise.reject({ message: `Validation failed: ${errMsg}` });
+        }
+      })
+      .then(() => this.put(doc, ...args));
+  }
+  validatingBulkDocs(docs, ...args) {
+    return Promise.resolve(validate(this.$bulkSchema, docs.filter(isNotDDoc)))
+      .then((errMsg) => {
+        if (errMsg) {
+          return Promise.reject({ message: `Validation failed: ${errMsg}` });
+        }
+      })
+      .then(() => this.bulkDocs(docs, ...args));
   }
 }
 
@@ -43,7 +65,7 @@ export default class DBManager {
       }
     };
     // TODO: 非常奇怪的行为，添加 pouchdb-find 插件并使用 .find 后，创建 design doc 必须变成异步才会成功
-    return new Promise(resolve => setTimeout(resolve))
+    return new Promise(resolve => setTimeout(resolve, 500))
       .then(() => db.put(viewDesignDoc))
       .catch((err) => {
         if (err.name !== 'conflict') {
@@ -64,9 +86,9 @@ export default class DBManager {
     const actualDBName = this._prefix + name;
     const db = new ExtendedPouchDB({
       name: actualDBName,
-      generateID,
       ...options
     });
+    db.initExtendedOpts({ schema, generateID });
     if (this._remoteCouchdbHost) {
       PouchDB.sync(actualDBName, this._remoteCouchdbHost + actualDBName, {
         live: true
@@ -77,7 +99,6 @@ export default class DBManager {
         DBManager.createViewDesignDoc(db, viewName, viewCfg);
       });
     }
-    db.schema = schema;
     this.databases[name] = db;
     this[name] = db;
     return db;
