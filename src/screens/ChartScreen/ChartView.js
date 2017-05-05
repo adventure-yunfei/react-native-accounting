@@ -6,6 +6,12 @@ import chartsHtml from '../../../static/build/chats.html';
 const BackgroundColors = ['#FF6384', '#36A2EB', '#FFCE56'];
 const HoverBackgroundColors = ['#FF6384', '#36A2EB', '#FFCE56'];
 
+const exampleDatas = [
+  { label: '示例-1', value: 100 },
+  { label: '示例-2', value: 200 },
+  { label: '示例-3', value: 300 }
+];
+
 export default class ChartsScreen extends React.PureComponent {
   static propTypes = {
     chartData: PropTypes.array.isRequired
@@ -13,14 +19,12 @@ export default class ChartsScreen extends React.PureComponent {
 
   componentDidMount() {
     const { chartData } = this.props;
-    if (chartData.length) {
-      this.sendDataToWebView(chartData);
-    }
+    this.sendDataToWebView(chartData.length ? chartData : exampleDatas);
   }
 
   componentWillUpdate(nextProps) {
     if (nextProps.chartData.length && nextProps.chartData !== this.props.chartData) {
-      this.sendDataToWebView(nextProps.chartData);
+      this.sendDataToWebView(nextProps.chartData.length ? nextProps.chartData : exampleDatas);
     }
   }
 

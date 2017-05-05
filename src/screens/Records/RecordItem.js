@@ -1,9 +1,9 @@
 import React, { PropTypes } from 'react';
 import { View, StyleSheet } from 'react-native';
 import moment from 'moment';
+import Icon from 'react-native-elements/src/icons/Icon';
 
 import BaseText from '../../components/BaseText';
-import FakeIcon from '../../components/FakeIcon';
 import { Colors } from '../../variables';
 import EnumRecordType from '../../enums/EnumRecordType';
 
@@ -80,7 +80,7 @@ export default class RecordItem extends React.PureComponent {
           <BaseText style={styles.date__title}>{mDate.format('DD')}</BaseText>
           <BaseText style={styles.date__subtitle}>{mDate.format('ddd')}</BaseText>
         </View>
-        <FakeIcon size={47} />
+        <Icon size={47} name="camera-alt" color="#D2D2D2" />
         <View style={styles.desc}>
           <BaseText style={styles.desc__cat}>{detailRecord.categoryName}</BaseText>
           <BaseText style={styles.desc__note}>{detailRecord.remark}</BaseText>

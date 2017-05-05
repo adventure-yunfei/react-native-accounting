@@ -1,9 +1,9 @@
 import React, { PropTypes } from 'react';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import Tabbar from 'react-native-tabbar';
+import Icon from 'react-native-elements/src/icons/Icon';
 
 import BaseText from '../../components/BaseText';
-import FakeIcon from '../../components/FakeIcon';
 import exposeRootNavigation from '../../lib/exposeRootNavigation';
 import { Geometries } from '../../variables';
 import CustomPropTypes from '../../lib/CustomPropTypes';
@@ -13,12 +13,18 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-around',
-    backgroundColor: 'rgba(128,128,128,.9)'
+    backgroundColor: 'rgba(102,102,102,.9)',
+    alignItems: 'center'
   },
 
   tabbarItem: {
     alignItems: 'center',
     justifyContent: 'center'
+  },
+  tabbarItem__text: {
+    paddingTop: 3,
+    fontSize: 10,
+    color: '#fff'
   }
 });
 
@@ -33,8 +39,8 @@ class TabbarItem extends React.PureComponent {
     return (
       <TouchableOpacity onPress={onPress}>
         <View style={styles.tabbarItem}>
-          <FakeIcon name={iconName} color="#fff" />
-          <BaseText color="#fff">{label}</BaseText>
+          <Icon name={iconName} color="#fff" size={24} />
+          <BaseText style={styles.tabbarItem__text}>{label}</BaseText>
         </View>
       </TouchableOpacity>
     );
@@ -60,7 +66,7 @@ export default class HomeTabbar extends React.PureComponent {
       <Tabbar height={Geometries.Tabbar}>
         <View style={styles.tabbarContainer}>
           <TabbarItem iconName="credit-card" label="账户" onPress={this.toAccountsScreen} />
-          <TabbarItem iconName="credit-card" label="图表" onPress={this.toChartScreen} />
+          <TabbarItem iconName="pie-chart" label="图表" onPress={this.toChartScreen} />
         </View>
       </Tabbar>
     );

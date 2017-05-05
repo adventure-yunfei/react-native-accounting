@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
 
 import BaseText from '../../components/BaseText';
-import FakeIcon from '../../components/FakeIcon';
+import Icon from 'react-native-elements/src/icons/Icon';
 import AccountsSummary from './AccountsSummary';
 import flatToTree from '../../utils/flatToTree';
 import utils from '../../utils';
@@ -65,8 +65,8 @@ const styles = StyleSheet.create({
     color: Colors.Text_Hint
   },
   accountRow__rightIcon: {
-    marginLeft: 10,
-    marginRight: 15
+    marginLeft: 4,
+    marginRight: 8
   }
 });
 
@@ -106,7 +106,7 @@ export default class Accounts extends React.PureComponent {
         </View>
         {accountGrp.children.map((account, idx) => (
           <View key={account._id} style={styles.accountRow}>
-            <FakeIcon size={37} containerStyle={styles.accountRow__leftIcon} />
+            <Icon size={37} containerStyle={styles.accountRow__leftIcon} name="credit-card" color="#AAA" />
             <View
               style={[
                 styles.accountRow__contentContainer,
@@ -115,7 +115,7 @@ export default class Accounts extends React.PureComponent {
             >
               <BaseText style={styles.accountRow__mainText}>{account.name}</BaseText>
               <BaseText style={styles.accountRow__amount}>{account.amount}</BaseText>
-              <FakeIcon size={7} containerStyle={styles.accountRow__rightIcon} />
+              <Icon name="keyboard-arrow-right" size={22} color="#D2D2D2" containerStyle={styles.accountRow__rightIcon} />
             </View>
           </View>
         ))}

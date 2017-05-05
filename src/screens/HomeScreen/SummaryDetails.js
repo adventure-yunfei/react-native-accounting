@@ -1,9 +1,9 @@
 import React, { PropTypes } from 'react';
 import { View, TouchableHighlight, StyleSheet } from 'react-native';
 import moment from 'moment';
+import Icon from 'react-native-elements/src/icons/Icon';
 
 import BaseText from '../../components/BaseText';
-import FakeIcon from '../../components/FakeIcon';
 import { getDayPeriod, getWeekPeriod, getMonthPeriod, getYearPeriod } from '../../utils/period';
 import CustomPropTypes from '../../lib/CustomPropTypes';
 import { Colors } from '../../variables';
@@ -62,9 +62,9 @@ class DetailRow extends React.PureComponent {
   render() {
     const { onPress, icon, title, subtitle, income, expenditure } = this.props;
     return (
-      <TouchableHighlight onPress={onPress}>
+      <TouchableHighlight onPress={onPress} underlayColor="#f1f1f1">
         <View style={styles.detailRow} >
-          <FakeIcon name={icon} size={37} containerStyle={styles.detailRowMainIcon} />
+          <Icon color="#C3C5C9" name={icon} size={37} containerStyle={styles.detailRowMainIcon} />
 
           <View style={styles.rightContentBox}>
             <View>
@@ -75,7 +75,7 @@ class DetailRow extends React.PureComponent {
               <BaseText style={styles.expenditureAmount}>{expenditure.toFixed(2)}</BaseText>
               <BaseText style={styles.incomeAmount}>{income.toFixed(2)}</BaseText>
             </View>
-            <FakeIcon name="keyboard-arrow-right" size={22} color="rgb(210,210,210)" containerStyle={styles.rightArrowIconContainer} />
+            <Icon name="keyboard-arrow-right" size={22} color="#D2D2D2" containerStyle={styles.rightArrowIconContainer} />
           </View>
 
         </View>
@@ -128,10 +128,10 @@ export default class SummaryDetails extends React.PureComponent {
 
     return (
       <View>
-        <DetailRow onPress={this.jumpToTodayRecords} icon="date-range" title="今天" subtitle="" {...daySummary} />
+        <DetailRow onPress={this.jumpToTodayRecords} icon="today" title="今天" subtitle="" {...daySummary} />
         <DetailRow onPress={this.jumpToWeekRecords} icon="date-range" title="本周" subtitle={weekSubtitle} {...weekSummary} />
-        <DetailRow onPress={this.jumpToMonthRecords} icon="date-range" title="4月" subtitle={monthSubtitle} {...monthSummary} />
-        <DetailRow onPress={this.jumpToYearRecords} icon="date-range" title="本年" subtitle={yearSubtitle} {...yearSummary} />
+        <DetailRow onPress={this.jumpToMonthRecords} icon="web" title="4月" subtitle={monthSubtitle} {...monthSummary} />
+        <DetailRow onPress={this.jumpToYearRecords} icon="line-style" title="本年" subtitle={yearSubtitle} {...yearSummary} />
       </View>
     );
   }

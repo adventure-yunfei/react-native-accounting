@@ -1,7 +1,7 @@
 import React from 'react';
 import { TouchableHighlight, Text, StyleSheet } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 
-import FakeLinearGradient from '../../components/FakeLinearGradient';
 import exposeRootNavigation from '../../lib/exposeRootNavigation';
 import CustomPropTypes from '../../lib/CustomPropTypes';
 
@@ -15,6 +15,7 @@ const styles = StyleSheet.create({
   },
 
   gradient: {
+    width: '100%',
     height: 46,
     alignItems: 'center',
     justifyContent: 'center',
@@ -40,10 +41,10 @@ export default class WriteOneButton extends React.PureComponent {
 
   render() {
     return (
-      <TouchableHighlight onPress={this.onPress} style={styles.container}>
-        <FakeLinearGradient style={styles.gradient} colors={['#fca62c', '#fd8b1d']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}>
+      <TouchableHighlight onPress={this.onPress} style={styles.container} underlayColor="transparent">
+        <LinearGradient style={styles.gradient} colors={['#fca62c', '#fd8b1d']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}>
           <Text style={styles.label}>记一笔</Text>
-        </FakeLinearGradient>
+        </LinearGradient>
       </TouchableHighlight>
     );
   }

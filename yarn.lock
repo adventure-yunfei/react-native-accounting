@@ -4110,6 +4110,13 @@ react-native-drawer-layout@~1.1.1:
   dependencies:
     react-native-dismiss-keyboard "1.0.0"
 
+react-native-elements@^0.11.2:
+  version "0.11.2"
+  resolved "http://registry.npm.taobao.org/react-native-elements/download/react-native-elements-0.11.2.tgz#441b26d1a3102eb11abd0dbf24e291b3eb630e56"
+  dependencies:
+    react-native-side-menu "^0.20.1"
+    react-native-tab-navigator "^0.3.3"
+
 react-native-linear-gradient@^2.0.0:
   version "2.0.0"
   resolved "http://registry.npm.taobao.org/react-native-linear-gradient/download/react-native-linear-gradient-2.0.0.tgz#7442c00e1fcd9fca329119dcbaf744d12bcd1b5a"
@@ -4127,11 +4134,21 @@ react-native-scrollable-tab-view@^0.7.2:
     react-static-container "^1.0.1"
     react-timer-mixin "^0.13.3"
 
+react-native-side-menu@^0.20.1:
+  version "0.20.1"
+  resolved "http://registry.npm.taobao.org/react-native-side-menu/download/react-native-side-menu-0.20.1.tgz#df21b4bb9d8a1aa3bae53d74ddf8a739eb59bfc5"
+
 react-native-swipe-out@~2.0.12:
   version "2.0.14"
   resolved "http://registry.npm.taobao.org/react-native-swipe-out/download/react-native-swipe-out-2.0.14.tgz#971b1d62dbc383892e633da003bfa69a766fe765"
   dependencies:
     react-tween-state "^0.1.5"
+
+react-native-tab-navigator@^0.3.3:
+  version "0.3.3"
+  resolved "http://registry.npm.taobao.org/react-native-tab-navigator/download/react-native-tab-navigator-0.3.3.tgz#b222bad21fbe773c8d28f9a0de30ce62b08724d3"
+  dependencies:
+    immutable "^3.8.1"
 
 react-native-tab-view@^0.0.61:
   version "0.0.61"
