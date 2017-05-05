@@ -4139,6 +4139,13 @@ react-native-tabbar@^1.0.0:
   version "1.0.0"
   resolved "http://registry.npm.taobao.org/react-native-tabbar/download/react-native-tabbar-1.0.0.tgz#927ce9fba0292674e7f05eea72f3520f66c85907"
 
+react-native-vector-icons@4.0:
+  version "4.0.1"
+  resolved "http://registry.npm.taobao.org/react-native-vector-icons/download/react-native-vector-icons-4.0.1.tgz#39c05d2e775deeb98d5afdbda5dcf67965ff674f"
+  dependencies:
+    lodash "^4.0.0"
+    yargs "^6.3.0"
+
 react-native@0.43.4:
   version "0.43.4"
   resolved "http://registry.npm.taobao.org/react-native/download/react-native-0.43.4.tgz#92fb6937ab415b2e5612835a93a61845de98eb4d"
