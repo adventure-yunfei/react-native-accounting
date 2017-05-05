@@ -20,6 +20,7 @@
     "pouchdb-react-native": "^6.2.0",
     "react": "16.0.0-alpha.6",
     "react-native": "0.43.4",
+    "react-native-linear-gradient": "^2.0.0",
     "react-native-tabbar": "^1.0.0",
     "react-native-vector-icons": "4.0",
     "react-navigation": "^1.0.0-beta.7",

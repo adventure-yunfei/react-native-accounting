@@ -4110,6 +4110,10 @@ react-native-drawer-layout@~1.1.1:
   dependencies:
     react-native-dismiss-keyboard "1.0.0"
 
+react-native-linear-gradient@^2.0.0:
+  version "2.0.0"
+  resolved "http://registry.npm.taobao.org/react-native-linear-gradient/download/react-native-linear-gradient-2.0.0.tgz#7442c00e1fcd9fca329119dcbaf744d12bcd1b5a"
+
 react-native-menu@~0.20.1:
   version "0.20.2"
   resolved "http://registry.npm.taobao.org/react-native-menu/download/react-native-menu-0.20.2.tgz#a1bec7a3d1660246561298c851f98728bc4a1305"
