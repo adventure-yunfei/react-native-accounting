@@ -11,3 +11,7 @@
   - 首先安装 yarn 工具: `npm install yarn -g`
   - 通过 yarn 安装依赖: `yarn install`
 - 执行 `react-native run-ios`
+
+# DEMO
+
+![image](https://im2.ezgif.com/tmp/ezgif-2-8b93f49c3a.gif)
