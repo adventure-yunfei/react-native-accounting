@@ -1,3 +1,8 @@
+# DEMO
+
+![image](http://static.yunfei.me/react-native-accounting-demo.gif)
+
+
 # 启动
 
 ### iOS on Mac
@@ -11,7 +16,3 @@
   - 首先安装 yarn 工具: `npm install yarn -g`
   - 通过 yarn 安装依赖: `yarn install`
 - 执行 `react-native run-ios`
-
-# DEMO
-
-![image](http://static.yunfei.me/react-native-accounting-demo.gif)
