@@ -14,4 +14,4 @@
 
 # DEMO
 
-![image](https://im2.ezgif.com/tmp/ezgif-2-8b93f49c3a.gif)
+![image](http://static.yunfei.me/react-native-accounting-demo.gif)
