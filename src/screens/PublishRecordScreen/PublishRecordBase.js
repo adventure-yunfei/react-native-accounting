@@ -30,7 +30,7 @@ export function mapDBsToProps(dbs) {
 
 export default class PublishRecordBase extends React.PureComponent {
   static propTypes = {
-    rootNavigation: CustomPropTypes.rootNavigation.isRequired,
+    rootNavigation: CustomPropTypes.navigation.isRequired,
     databases: PropTypes.object,
     accounts: PropTypes.array,
     categories: PropTypes.array

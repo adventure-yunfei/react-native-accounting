@@ -32,19 +32,6 @@ export function provideRootNavigationContext(BaseComponent) {
     }
 
     getChildContext() {
-      const rootNavigation = this.props.navigation;
-      rootNavigation.$navigateByPath = function $navigateByPath(path, params) {
-        const routeNames = path.split('/');
-        const action = routeNames.reduceRight((acc, routeName) => {
-          return NavigationActions.navigate({
-            routeName,
-            params,
-            action: acc
-          });
-        }, undefined);
-
-        rootNavigation.dispatch(action);
-      };
       return {
         rootNavigation: this.props.navigation
       };

@@ -13,6 +13,19 @@ export const navigationExt = navigation => ({
       params,
       action
     });
+  },
+
+  deepNavigate(routeNamesPath, params) {
+    const routeNames = routeNamesPath.split('/');
+    const action = routeNames.reduceRight((acc, routeName) => {
+      return NavigationActions.navigate({
+        routeName,
+        params,
+        action: acc
+      });
+    }, undefined);
+
+    navigation.dispatch(action);
   }
 });
 

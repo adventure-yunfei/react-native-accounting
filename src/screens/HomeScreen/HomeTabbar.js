@@ -51,7 +51,7 @@ class TabbarItem extends React.PureComponent {
 @exposeRootNavigation
 export default class HomeTabbar extends React.PureComponent {
   static propTypes = {
-    rootNavigation: CustomPropTypes.rootNavigation.isRequired
+    rootNavigation: CustomPropTypes.navigation.isRequired
   }
 
   toAccountsScreen = () => {
@@ -59,7 +59,7 @@ export default class HomeTabbar extends React.PureComponent {
   }
 
   toChartScreen = () => {
-    this.props.rootNavigation.$navigateByPath('Chart');
+    this.props.rootNavigation.navigate('Chart');
   }
 
   render() {
