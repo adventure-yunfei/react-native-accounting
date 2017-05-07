@@ -1,8 +1,8 @@
 import React, { PropTypes } from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
+import Icon from 'react-native-elements/src/icons/Icon';
 
 import BaseText from '../../components/BaseText';
-import Icon from 'react-native-elements/src/icons/Icon';
 import AccountsSummary from './AccountsSummary';
 import flatToTree from '../../utils/flatToTree';
 import utils from '../../utils';

@@ -4,7 +4,7 @@ export const FontSizes = {
 
 export const Colors = {
   Default: '#333',
-  Orange: 'FDD352',
+  Orange: '#FDD352',
 
   Income: '#F06460',
   Expenditure: '#25B98A',

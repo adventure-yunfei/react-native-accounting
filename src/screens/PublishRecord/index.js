@@ -1,17 +1,15 @@
 import { TabNavigator, TabBarTop } from 'react-navigation';
+
 import PublishExpenditureRecord from './PublishExpenditureRecord';
 import PublishIncomeRecord from './PublishIncomeRecord';
 import PublishTransferRecord from './PublishTransferRecord';
 import { Colors } from '../../variables';
-
-const PublishTitle = '记一笔';
 
 export default TabNavigator(
   {
     Expenditure: {
       screen: PublishExpenditureRecord,
       navigationOptions: {
-        title: PublishTitle,
         tabBarLabel: '支出'
       }
     },
@@ -19,7 +17,6 @@ export default TabNavigator(
     Income: {
       screen: PublishIncomeRecord,
       navigationOptions: {
-        title: PublishTitle,
         tabBarLabel: '收入'
       }
     },
@@ -27,7 +24,6 @@ export default TabNavigator(
     Transfer: {
       screen: PublishTransferRecord,
       navigationOptions: {
-        title: PublishTitle,
         tabBarLabel: '转账'
       }
     }
@@ -40,6 +36,9 @@ export default TabNavigator(
     tabBarPosition: 'top',
     swipeEnabled: true,
     animationEnabled: true,
+    navigationOptions: {
+      title: '记一笔'
+    },
     tabBarOptions: {
       style: {
         backgroundColor: '#FDD352'

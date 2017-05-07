@@ -135,6 +135,9 @@ export default TabNavigator(
     tabBarPosition: 'top',
     swipeEnabled: true,
     animationEnabled: true,
+    navigationOptions: {
+      title: '图表'
+    },
     tabBarOptions: {
       style: {
         backgroundColor: '#FDD352'
