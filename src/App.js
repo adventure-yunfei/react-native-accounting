@@ -6,12 +6,12 @@ import Icon from 'react-native-elements/src/icons/Icon';
 import './setupApp';
 import HomeScreen from './screens/HomeScreen';
 import AccountsScreen from './screens/AccountsScreen';
-import Records from './screens/Records';
-import PublishRecord from './screens/PublishRecord';
+import RecordsScreen from './screens/RecordsScreen';
+import PublishRecordScreen from './screens/PublishRecordScreen';
 import ChartScreen from './screens/ChartScreen';
 import { provideRootNavigationContext } from './lib/exposeRootNavigation';
 import { Colors } from './variables';
-import './shell';
+import './scripts';
 
 const styles = StyleSheet.create({
   header: {
@@ -30,7 +30,7 @@ const App = StackNavigator(
     },
 
     Records: {
-      screen: provideRootNavigationContext(Records)
+      screen: provideRootNavigationContext(RecordsScreen)
     },
 
     Accounts: {
@@ -38,7 +38,7 @@ const App = StackNavigator(
     },
 
     PublishRecord: {
-      screen: provideRootNavigationContext(PublishRecord)
+      screen: provideRootNavigationContext(PublishRecordScreen)
     },
 
     Chart: {
