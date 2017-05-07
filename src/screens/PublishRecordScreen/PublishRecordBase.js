@@ -12,6 +12,7 @@ import { getDayPeriod } from '../../utils/period';
 import { Colors } from '../../variables';
 import EnumRecordType from '../../enums/EnumRecordType';
 import CustomPropTypes from '../../lib/CustomPropTypes';
+import { navigationExt } from '../../lib/navigationExt';
 
 const styles = StyleSheet.create({
   amountInput: {
@@ -92,7 +93,9 @@ export default class PublishRecordBase extends React.PureComponent {
       _id: databases.records.generateID(data),
       ...data
     })
-      .then(() => rootNavigation.navigate('Records', getDayPeriod()));
+      .then(() => {
+        navigationExt(rootNavigation).replace('Records', getDayPeriod());
+      });
   }
 
   onPublishAgain = () => {

@@ -10,6 +10,7 @@ import RecordsScreen from './screens/RecordsScreen';
 import PublishRecordScreen from './screens/PublishRecordScreen';
 import ChartScreen from './screens/ChartScreen';
 import { provideRootNavigationContext } from './lib/exposeRootNavigation';
+import { argumentNavigatorRouter } from './lib/navigationExt';
 import { Colors } from './variables';
 import './scripts';
 
@@ -23,7 +24,7 @@ const styles = StyleSheet.create({
   }
 });
 
-const App = StackNavigator(
+const App = argumentNavigatorRouter(StackNavigator(
   {
     Home: {
       screen: provideRootNavigationContext(HomeScreen),
@@ -64,7 +65,7 @@ const App = StackNavigator(
       )
     })
   }
-);
+));
 
 App.displayName = `App-${App.name || App.displayName}`;
 
