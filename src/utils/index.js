@@ -1,4 +1,4 @@
-export default {
+const utils = {
   findBy(arr, field, val) {
     return arr.find(item => item && item[field] === val);
   },
@@ -10,3 +10,5 @@ export default {
     }, {});
   }
 };
+
+export default utils;

@@ -30,6 +30,7 @@ export function mapDBsToProps(dbs) {
 
 export default class PublishRecordBase extends React.PureComponent {
   static propTypes = {
+    editingRecord: PropTypes.object,
     rootNavigation: CustomPropTypes.navigation.isRequired,
     databases: PropTypes.object,
     accounts: PropTypes.array,
@@ -38,36 +39,6 @@ export default class PublishRecordBase extends React.PureComponent {
 
   componentWillMount() {
     this.setState(this.getInitState());
-  }
-
-  componentWillReceiveProps(nextProps) {
-    let newData = null;
-    if (nextProps.accounts !== this.props.accounts) {
-      const defaultAccount = nextProps.accounts.find(account => account.parentId);
-      if (defaultAccount) {
-        newData = Object.assign(newData || {}, {
-          [PropKeyAccountId]: defaultAccount._id
-        });
-      }
-    }
-
-    if (nextProps.categories !== this.props.categories) {
-      const defaultCat = nextProps.categories.find(cat => cat.parentId);
-      if (defaultCat) {
-        newData = Object.assign(newData || {}, {
-          [PropKeyCatId]: defaultCat._id
-        });
-      }
-    }
-
-    if (newData) {
-      this.setState(state => ({
-        data: {
-          ...state.data,
-          ...newData
-        }
-      }));
-    }
   }
 
   onPropChange = (key, val) => {
@@ -99,12 +70,12 @@ export default class PublishRecordBase extends React.PureComponent {
   }
 
   onPublishAgain = () => {
-
+    global.alert('TODO...');
   }
 
   getInitState() {
     return {
-      data: {
+      data: this.props.editingRecord || {
         type: EnumRecordType.Expenditure,
         [PropKeyAmount]: 0,
         [PropKeyAccountId]: null,

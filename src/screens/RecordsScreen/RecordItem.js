@@ -1,23 +1,32 @@
 import React, { PropTypes } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, TouchableHighlight } from 'react-native';
 import moment from 'moment';
 import Icon from 'react-native-elements/src/icons/Icon';
+import Swipeout from 'react-native-swipeout';
+import shader from 'shader';
 
 import BaseText from '../../components/BaseText';
 import { Colors } from '../../variables';
 import EnumRecordType from '../../enums/EnumRecordType';
+import exposeRootNavigation from '../../lib/exposeRootNavigation';
+import CustomPropTypes from '../../lib/CustomPropTypes';
+import databases from '../../databases';
 
 const styles = StyleSheet.create({
+  swipeWrapper: {
+    borderBottomWidth: 1,
+    borderStyle: 'solid',
+    borderBottomColor: '#F1F1F1',
+    backgroundColor: '#fff'
+  },
+
   container: {
     height: 60,
     flexDirection: 'row',
     alignItems: 'center',
     paddingLeft: 16,
     paddingRight: 16,
-    backgroundColor: '#fff',
-    borderBottomWidth: 1,
-    borderStyle: 'solid',
-    borderBottomColor: '#F1F1F1'
+    backgroundColor: '#fff'
   },
 
   date: {
@@ -58,9 +67,25 @@ const styles = StyleSheet.create({
   }
 });
 
+@exposeRootNavigation
 export default class RecordItem extends React.PureComponent {
   static propTypes = {
-    detailRecord: PropTypes.object.isRequired
+    detailRecord: PropTypes.object.isRequired,
+    rootNavigation: CustomPropTypes.navigation.isRequired
+  }
+
+  onDeletePress = () => {
+    databases.records.validatingPut({
+      ...this.props.detailRecord,
+      _deleted: true
+    });
+  }
+
+  onEditPress = () => {
+    const { detailRecord, rootNavigation } = this.props;
+    rootNavigation.navigate('EditRecord', {
+      record: detailRecord
+    });
   }
 
   render() {
@@ -73,22 +98,40 @@ export default class RecordItem extends React.PureComponent {
       case EnumRecordType.Transfer: amountStyle.push(styles.amount_transfer); break;
       default: break;
     }
+    const swipeRightButtons = [
+      {
+        text: '删除',
+        backgroundColor: '#DF4147',
+        underlayColor: shader('#DF4147', 0.1),
+        onPress: this.onDeletePress
+      },
+      {
+        text: '编辑',
+        backgroundColor: '#F58749',
+        underlayColor: shader('#F58749', 0.1),
+        onPress: this.onEditPress
+      }
+    ];
 
     return (
-      <View style={styles.container}>
-        <View style={styles.date}>
-          <BaseText style={styles.date__title}>{mDate.format('DD')}</BaseText>
-          <BaseText style={styles.date__subtitle}>{mDate.format('ddd')}</BaseText>
-        </View>
-        <Icon size={47} name="camera-alt" color="#D2D2D2" />
-        <View style={styles.desc}>
-          <BaseText style={styles.desc__cat}>{detailRecord.categoryName}</BaseText>
-          <BaseText style={styles.desc__note}>{detailRecord.remark}</BaseText>
-        </View>
-        <BaseText style={amountStyle}>
-          {detailRecord.amount.toFixed(2)}
-        </BaseText>
-      </View>
+      <Swipeout right={swipeRightButtons} style={styles.swipeWrapper}>
+        <TouchableHighlight underlayColor="#eee" onPress={this.onEditPress}>
+          <View style={styles.container}>
+            <View style={styles.date}>
+              <BaseText style={styles.date__title}>{mDate.format('DD')}</BaseText>
+              <BaseText style={styles.date__subtitle}>{mDate.format('ddd')}</BaseText>
+            </View>
+            <Icon size={47} name="camera-alt" color="#D2D2D2" />
+            <View style={styles.desc}>
+              <BaseText style={styles.desc__cat}>{detailRecord.categoryName}</BaseText>
+              <BaseText style={styles.desc__note}>{detailRecord.remark}</BaseText>
+            </View>
+            <BaseText style={amountStyle}>
+              {detailRecord.amount.toFixed(2)}
+            </BaseText>
+          </View>
+        </TouchableHighlight>
+      </Swipeout>
     );
   }
 }

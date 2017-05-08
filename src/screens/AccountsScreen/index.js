@@ -81,6 +81,7 @@ const styles = StyleSheet.create({
     amount: amountMap[account._id] || 0
   }));
   accountDetailGroups.forEach((group) => {
+    /* eslint no-param-reassign: off */
     group.amount = group.children.reduce((acc, { amount }) => acc + amount, 0);
     netAssets += group.amount;
   });

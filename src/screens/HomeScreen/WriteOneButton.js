@@ -1,5 +1,6 @@
 import React from 'react';
 import { TouchableHighlight, Text, StyleSheet } from 'react-native';
+/* eslint import/no-unresolved: off, import/extensions: off */
 import LinearGradient from 'react-native-linear-gradient';
 
 import exposeRootNavigation from '../../lib/exposeRootNavigation';

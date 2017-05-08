@@ -5,8 +5,8 @@ import dbManager from './dbManager';
 import EnumRecordType from '../enums/EnumRecordType';
 
 const commonRecordSrc = {
+  _id: 'string',
   amount: 'number',
-  categoryId: 'string',
   accountId: 'string',
   timestamp: 'number',
   remark: 'string',
@@ -23,7 +23,8 @@ dbManager.createDatabase({
   schema: compileAnyOf([
     compile({
       ...commonRecordSrc,
-      type: compileEnum([EnumRecordType.Expenditure, EnumRecordType.Income])
+      type: compileEnum([EnumRecordType.Expenditure, EnumRecordType.Income]),
+      categoryId: 'string'
     }),
     compile({
       ...commonRecordSrc,
@@ -35,6 +36,7 @@ dbManager.createDatabase({
   views: {
     amountGroupByAccounts: {
       /* global emit,__RECORD_TYPE_EXPENDITURE__,__RECORD_TYPE_INCOME__,__RECORD_TYPE_TRANSFER__ */
+      /* eslint func-names: off */
       map: function (doc) {
         if (doc.type === __RECORD_TYPE_EXPENDITURE__) {
           emit(doc.accountId, -doc.amount);

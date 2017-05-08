@@ -7,7 +7,6 @@ import BaseText from '../../components/BaseText';
 import exposeRootNavigation from '../../lib/exposeRootNavigation';
 import { Geometries } from '../../variables';
 import CustomPropTypes from '../../lib/CustomPropTypes';
-import { navigationExt } from '../../lib/navigationExt';
 
 const styles = StyleSheet.create({
   tabbarContainer: {
@@ -55,7 +54,7 @@ export default class HomeTabbar extends React.PureComponent {
   }
 
   toAccountsScreen = () => {
-    navigationExt(this.props.rootNavigation).replace('Accounts');
+    this.props.rootNavigation.navigate('Accounts');
   }
 
   toChartScreen = () => {

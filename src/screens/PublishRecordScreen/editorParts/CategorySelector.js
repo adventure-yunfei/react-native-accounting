@@ -4,9 +4,11 @@ import Picker from 'antd-mobile/lib/picker';
 import LabeledItem from './LabeledItem';
 import flatToTree from '../../../utils/flatToTree';
 import utils from '../../../utils';
+import { componentWillApplyProps } from '../../../lib/lifecycle';
 
 export const PropKeyCatId = 'categoryId';
 
+@componentWillApplyProps
 export default class CategorySelector extends React.PureComponent {
   static propTypes = {
     onPropChange: PropTypes.func.isRequired,
@@ -14,13 +16,17 @@ export default class CategorySelector extends React.PureComponent {
     data: PropTypes.object.isRequired
   }
 
-  componentWillMount() {
-    this.prepareCategoriesData(this.props.categories);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.categories !== this.props.categories) {
-      this.prepareCategoriesData(nextProps.categories);
+  componentWillApplyProps(prevProps = {}, nextProps) {
+    const { data, categories, onPropChange } = nextProps;
+    if (categories !== prevProps.categories) {
+      this.prepareCategoriesData(categories);
+      const currCatId = data[PropKeyCatId];
+      if (!currCatId) {
+        const firstValidAccount = categories.find(cat => cat.parentId);
+        if (firstValidAccount) {
+          onPropChange(PropKeyCatId, firstValidAccount._id);
+        }
+      }
     }
   }
 
@@ -28,13 +34,13 @@ export default class CategorySelector extends React.PureComponent {
     this.props.onPropChange(PropKeyCatId, subCatId);
   }
 
-  prepareCategoriesData(accounts) {
+  prepareCategoriesData(categories) {
     const genItem = item => ({
       value: item._id,
       label: item.name
     });
     this.setState({
-      categoriesTree: flatToTree(accounts, genItem)
+      categoriesTree: flatToTree(categories, genItem)
     });
   }
 

@@ -4,9 +4,11 @@ import Picker from 'antd-mobile/lib/picker';
 import LabeledItem from './LabeledItem';
 import flatToTree from '../../../utils/flatToTree';
 import utils from '../../../utils';
+import { componentWillApplyProps } from '../../../lib/lifecycle';
 
 export const PropKeyAccountId = 'accountId';
 
+@componentWillApplyProps
 export default class AccountSelector extends React.PureComponent {
   static propTypes = {
     onPropChange: PropTypes.func.isRequired,
@@ -14,13 +16,17 @@ export default class AccountSelector extends React.PureComponent {
     data: PropTypes.object.isRequired
   }
 
-  componentWillMount() {
-    this.prepareAccountsData(this.props.accounts);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.accounts !== this.props.accounts) {
-      this.prepareAccountsData(nextProps.accounts);
+  componentWillApplyProps(prevProps = {}, nextProps) {
+    const { data, accounts, onPropChange } = nextProps;
+    if (accounts !== prevProps.accounts) {
+      this.prepareAccountsData(accounts);
+      const currAccountId = data[PropKeyAccountId];
+      if (!currAccountId) {
+        const firstValidAccount = accounts.find(account => account.parentId);
+        if (firstValidAccount) {
+          onPropChange(PropKeyAccountId, firstValidAccount._id);
+        }
+      }
     }
   }
 

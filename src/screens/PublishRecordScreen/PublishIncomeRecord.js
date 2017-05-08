@@ -26,9 +26,11 @@ const styles = StyleSheet.create({
 export default class PublishIncomeRecord extends PublishRecordBase {
   getInitState() {
     const initState = super.getInitState();
-    Object.assign(initState.data, {
-      type: EnumRecordType.Income
-    });
+    if (!this.props.editingRecord) {
+      Object.assign(initState.data, {
+        type: EnumRecordType.Income
+      });
+    }
     return initState;
   }
 

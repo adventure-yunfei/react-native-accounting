@@ -133,8 +133,6 @@ export default TabNavigator(
     backBehavior: 'none',
     tabBarComponent: TabBarTop,
     tabBarPosition: 'top',
-    swipeEnabled: true,
-    animationEnabled: true,
     navigationOptions: {
       title: '图表'
     },

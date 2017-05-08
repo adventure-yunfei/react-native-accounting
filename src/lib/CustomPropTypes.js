@@ -22,17 +22,20 @@ import { PropTypes } from 'react';
 //   return chainedCheckType;
 // }
 
-const navigationShape = {
+const navigationBaseShape = {
   navigate: PropTypes.func.isRequired,
-  goBack: PropTypes.func.isRequired
+  goBack: PropTypes.func.isRequired,
+  state: PropTypes.object.isRequired
 };
 
 export default {
-  navigation: PropTypes.shape(navigationShape),
+  navigation: PropTypes.shape(navigationBaseShape),
 
-  rootNavigation: PropTypes.shape({
-    ...navigationShape,
-    $navigateByPath: PropTypes.func.isRequired
+  navigationWithParams: paramsType => PropTypes.shape({
+    ...navigationBaseShape,
+    state: PropTypes.shape({
+      params: paramsType
+    }).isRequired
   }),
 
   style: PropTypes.oneOfType([

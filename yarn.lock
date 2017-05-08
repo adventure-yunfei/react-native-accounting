@@ -4144,6 +4144,12 @@ react-native-swipe-out@~2.0.12:
   dependencies:
     react-tween-state "^0.1.5"
 
+react-native-swipeout@^2.0.13:
+  version "2.0.13"
+  resolved "http://registry.npm.taobao.org/react-native-swipeout/download/react-native-swipeout-2.0.13.tgz#b6877cdd70d362b242faafdee57ee6ed891b8443"
+  dependencies:
+    react-tween-state "^0.1.5"
+
 react-native-tab-navigator@^0.3.3:
   version "0.3.3"
   resolved "http://registry.npm.taobao.org/react-native-tab-navigator/download/react-native-tab-navigator-0.3.3.tgz#b222bad21fbe773c8d28f9a0de30ce62b08724d3"
@@ -4698,6 +4704,10 @@ set-blocking@^2.0.0:
 setimmediate@^1.0.5:
   version "1.0.5"
   resolved "http://registry.npm.taobao.org/setimmediate/download/setimmediate-1.0.5.tgz#290cbb232e306942d7d7ea9b83732ab7856f8285"
+
+shader@^0.1.3:
+  version "0.1.3"
+  resolved "http://registry.npm.taobao.org/shader/download/shader-0.1.3.tgz#f72120857ea798a88ea0cfa32651919707145c90"
 
 shallowequal@^0.2.2:
   version "0.2.2"

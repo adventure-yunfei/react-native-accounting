@@ -8,6 +8,7 @@ import HomeScreen from './screens/HomeScreen';
 import AccountsScreen from './screens/AccountsScreen';
 import RecordsScreen from './screens/RecordsScreen';
 import PublishRecordScreen from './screens/PublishRecordScreen';
+import EditRecordScreen from './screens/PublishRecordScreen/EditRecordScreen';
 import ChartScreen from './screens/ChartScreen';
 import { provideRootNavigationContext } from './lib/exposeRootNavigation';
 import { argumentNavigatorRouter } from './lib/navigationExt';
@@ -42,6 +43,10 @@ const App = argumentNavigatorRouter(StackNavigator(
       screen: provideRootNavigationContext(PublishRecordScreen)
     },
 
+    EditRecord: {
+      screen: provideRootNavigationContext(EditRecordScreen)
+    },
+
     Chart: {
       screen: ChartScreen
     }
@@ -50,10 +55,10 @@ const App = argumentNavigatorRouter(StackNavigator(
   {
     headerMode: 'screen',
     initialRouteName: 'Home',
-    // initialRouteParams: {
-    //   startTime: Date.now() - (7 * 24 * 60 * 60 * 1000),
-    //   endTime: Date.now()
-    // }
+    initialRouteParams: {
+      startTime: Date.now() - (7 * 24 * 60 * 60 * 1000),
+      endTime: Date.now()
+    },
     navigationOptions: ({ navigation }) => ({
       headerStyle: styles.header,
       headerLeft: (

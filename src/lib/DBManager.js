@@ -1,7 +1,8 @@
 import forEach from 'lodash/forEach';
+import pick from 'lodash/pick';
 import PouchDB from 'pouchdb-react-native';
 import pouchdbFind from 'pouchdb-find';
-import { compile, validate } from 'immutable-json-schema';
+import { compile, validate, createImmutableSchemaData } from 'immutable-json-schema';
 import shortid from 'shortid';
 
 PouchDB.plugin(pouchdbFind);
@@ -37,13 +38,20 @@ class ExtendedPouchDB extends PouchDB {
       .then(result => result.rows.map(item => item.doc));
   }
   validatingPut(doc, ...args) {
+    if (doc._deleted) {
+      return this.put(doc, ...args);
+    }
     return Promise.resolve(isNotDDoc(doc) ? validate(this.$schema, doc) : null)
       .then((errMsg) => {
         if (errMsg) {
           return Promise.reject({ message: `Validation failed: ${errMsg}` });
         }
+        return null;
       })
-      .then(() => this.put(doc, ...args));
+      .then(() => this.put(
+        Object.assign(createImmutableSchemaData(this.$schema, doc).toJS(), pick(doc, ['_rev'])),
+        ...args
+      ));
   }
   validatingBulkDocs(docs, ...args) {
     return Promise.resolve(validate(this.$bulkSchema, docs.filter(isNotDDoc)))
@@ -51,6 +59,7 @@ class ExtendedPouchDB extends PouchDB {
         if (errMsg) {
           return Promise.reject({ message: `Validation failed: ${errMsg}` });
         }
+        return null;
       })
       .then(() => this.bulkDocs(docs, ...args));
   }

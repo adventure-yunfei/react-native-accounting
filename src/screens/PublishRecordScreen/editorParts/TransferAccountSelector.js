@@ -5,6 +5,7 @@ import Picker from 'antd-mobile/lib/picker';
 import LabeledItem from './LabeledItem';
 import utils from '../../../utils';
 import { editorStyles } from './editorCommon';
+import { componentWillApplyProps } from '../../../lib/lifecycle';
 
 export const PropKeyAccountId = 'accountId';
 export const PropKeyToAccountId = 'toAccountId';
@@ -22,6 +23,7 @@ const styles = StyleSheet.create({
   }
 });
 
+@componentWillApplyProps
 export default class TransferAccountSelector extends React.PureComponent {
   static propTypes = {
     onPropChange: PropTypes.func.isRequired,
@@ -36,6 +38,32 @@ export default class TransferAccountSelector extends React.PureComponent {
   componentWillReceiveProps(nextProps) {
     if (nextProps.accounts !== this.props.accounts) {
       this.prepareAccountsData(nextProps.accounts);
+    }
+  }
+
+  componentWillApplyProps(prevProps = {}, nextProps) {
+    const { accounts, data, onPropChange } = nextProps;
+    if (accounts !== prevProps.accounts) {
+      let currAccountId = data[PropKeyAccountId];
+      const currToAccountId = data[PropKeyToAccountId];
+      const changes = {};
+      if (!currToAccountId) {
+        const newAccount = accounts.find(account => account.parentId);
+        if (newAccount) {
+          currAccountId = changes[PropKeyAccountId] = newAccount._id;
+        }
+      }
+      if (!currToAccountId) {
+        const newToAccount
+          = accounts.find(account => account.parentId && account._id !== currAccountId);
+        const newToAccountId = newToAccount ? newToAccount._id : currAccountId;
+        if (newToAccountId) {
+          changes[PropKeyToAccountId] = newToAccountId;
+        }
+      }
+      if (Object.keys(changes).length) {
+        onPropChange(changes);
+      }
     }
   }
 

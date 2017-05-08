@@ -24,10 +24,12 @@ const styles = StyleSheet.create({
 export default class PublishTransferRecord extends PublishRecordBase {
   getInitState() {
     const initState = super.getInitState();
-    Object.assign(initState.data, {
-      type: EnumRecordType.Transfer,
-      [PropKeyToAccountId]: null
-    });
+    if (!this.props.editingRecord) {
+      Object.assign(initState.data, {
+        type: EnumRecordType.Transfer,
+        [PropKeyToAccountId]: null
+      });
+    }
     return initState;
   }
 

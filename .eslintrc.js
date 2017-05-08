@@ -15,6 +15,9 @@ module.exports = {
 
 
     // ### Following are my own coding preference ###
+    "import/prefer-default-export": "off",
+    "no-return-assign": "off",
+    "no-multi-assign": "off",
     // The ending comma which don't make any sense make me unhappy. It's ONLY useful for diff comparasion
     "comma-dangle": "off",
     // I don't use jsx only in .jsx file
@@ -23,6 +26,19 @@ module.exports = {
     "react/no-multi-comp": "off",
     // No, stateless-fucntion style differs from Component style, which causes inconsistent codes and tough code refactor
     "react/prefer-stateless-function": "off",
+    // Custom lifecycle
+    'react/sort-comp': ['error', {
+      order: [
+        'static-methods',
+        'lifecycle',
+        '/^component.+$/', //Custom lifecycle
+        '/^on.+$/',
+        '/^(get|set)(?!(InitialState$|DefaultProps$|ChildContext$)).+$/',
+        'everything-else',
+        '/^render.+$/',
+        'render'
+      ],
+    }],
 
     // ### Temporary change ###
     // Before I get better solution, I don't want to forbid "array" and "object" types
