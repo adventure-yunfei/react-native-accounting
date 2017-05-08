@@ -5,8 +5,17 @@ import LabeledItem from './LabeledItem';
 import flatToTree from '../../../utils/flatToTree';
 import utils from '../../../utils';
 import { componentWillApplyProps } from '../../../lib/lifecycle';
+import EnumAccountType from '../../../enums/EnumAccountType';
 
 export const PropKeyAccountId = 'accountId';
+
+function findAccountCat(accounts, realAccount) {
+  let accountCat = realAccount && utils.findBy(accounts, '_id', realAccount.parentId);
+  if (accountCat && accountCat.type === EnumAccountType.Group) {
+    accountCat = utils.findBy(accounts, '_id', accountCat.parentId);
+  }
+  return accountCat;
+}
 
 @componentWillApplyProps
 export default class AccountSelector extends React.PureComponent {
@@ -22,7 +31,7 @@ export default class AccountSelector extends React.PureComponent {
       this.prepareAccountsData(accounts);
       const currAccountId = data[PropKeyAccountId];
       if (!currAccountId) {
-        const firstValidAccount = accounts.find(account => account.parentId);
+        const firstValidAccount = utils.findBy(accounts, 'type', EnumAccountType.Real);
         if (firstValidAccount) {
           onPropChange(PropKeyAccountId, firstValidAccount._id);
         }
@@ -50,10 +59,10 @@ export default class AccountSelector extends React.PureComponent {
     let pickerValue = null;
     if (data[PropKeyAccountId]) {
       const account = utils.findBy(accounts, '_id', data[PropKeyAccountId]);
-      const parentAccount = account && utils.findBy(accounts, '_id', account.parentId);
-      if (parentAccount) {
+      const accountCat = findAccountCat(accounts, account);
+      if (accountCat) {
         text = account.name;
-        pickerValue = [parentAccount._id, account._id];
+        pickerValue = [accountCat._id, account._id];
       }
     }
 

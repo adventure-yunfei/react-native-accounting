@@ -6,6 +6,7 @@ import LabeledItem from './LabeledItem';
 import utils from '../../../utils';
 import { editorStyles } from './editorCommon';
 import { componentWillApplyProps } from '../../../lib/lifecycle';
+import EnumAccountType from '../../../enums/EnumAccountType';
 
 export const PropKeyAccountId = 'accountId';
 export const PropKeyToAccountId = 'toAccountId';
@@ -48,14 +49,14 @@ export default class TransferAccountSelector extends React.PureComponent {
       const currToAccountId = data[PropKeyToAccountId];
       const changes = {};
       if (!currToAccountId) {
-        const newAccount = accounts.find(account => account.parentId);
+        const newAccount = utils.findBy(accounts, 'type', EnumAccountType.Real);
         if (newAccount) {
           currAccountId = changes[PropKeyAccountId] = newAccount._id;
         }
       }
       if (!currToAccountId) {
-        const newToAccount
-          = accounts.find(account => account.parentId && account._id !== currAccountId);
+        const newToAccount = accounts.find(account =>
+          account.type === EnumAccountType.Real && account._id !== currAccountId);
         const newToAccountId = newToAccount ? newToAccount._id : currAccountId;
         if (newToAccountId) {
           changes[PropKeyToAccountId] = newToAccountId;
@@ -84,7 +85,7 @@ export default class TransferAccountSelector extends React.PureComponent {
   prepareAccountsData(accounts) {
     this.setState({
       availableAccounts: accounts.reduce((acc, account) => {
-        if (account.parentId) {
+        if (account.type === EnumAccountType.Real) {
           acc.push({
             value: account._id,
             label: account.name

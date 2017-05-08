@@ -8,6 +8,7 @@ import shortid from 'shortid';
 PouchDB.plugin(pouchdbFind);
 
 const isNotDDoc = doc => doc._id && doc._id.startsWith('_design');
+const isDesignDoc = doc => doc._id && doc._id.startsWith('_design');
 
 class ExtendedPouchDB extends PouchDB {
   initExtendedOpts({ schema, generateID = null } = {}) {
@@ -37,31 +38,53 @@ class ExtendedPouchDB extends PouchDB {
     })
       .then(result => result.rows.map(item => item.doc));
   }
+  validateDoc(doc) {
+    if (doc._deleted && isDesignDoc(doc)) {
+      return { valid: true, message: null };
+    }
+    const errMsg = validate(this.$schema, doc);
+    return {
+      valid: !errMsg,
+      message: errMsg
+    };
+  }
+  filterDocFields(doc) {
+    if (doc._deleted || isDesignDoc(doc)) {
+      return doc;
+    }
+    return Object.assign(createImmutableSchemaData(this.$schema, doc).toJS(), pick(doc, ['_rev']));
+  }
   validatingPut(doc, ...args) {
     if (doc._deleted) {
       return this.put(doc, ...args);
     }
-    return Promise.resolve(isNotDDoc(doc) ? validate(this.$schema, doc) : null)
-      .then((errMsg) => {
-        if (errMsg) {
-          return Promise.reject({ message: `Validation failed: ${errMsg}` });
-        }
-        return null;
-      })
-      .then(() => this.put(
-        Object.assign(createImmutableSchemaData(this.$schema, doc).toJS(), pick(doc, ['_rev'])),
-        ...args
-      ));
+    const { valid, message } = this.validateDoc(doc);
+    if (!valid) {
+      return Promise.reject({ message: `Validation failed: ${message}` });
+    }
+    return this.put(
+      this.filterDocFields(doc),
+      ...args
+    );
   }
   validatingBulkDocs(docs, ...args) {
-    return Promise.resolve(validate(this.$bulkSchema, docs.filter(isNotDDoc)))
-      .then((errMsg) => {
-        if (errMsg) {
-          return Promise.reject({ message: `Validation failed: ${errMsg}` });
-        }
-        return null;
-      })
-      .then(() => this.bulkDocs(docs, ...args));
+    let invalidResult = null;
+    docs.some((doc, idx) => {
+      const res = this.validateDoc(doc);
+      if (!res.valid) {
+        invalidResult = res;
+        invalidResult.index = idx;
+        return true;
+      }
+      return false;
+    });
+    if (invalidResult) {
+      return Promise.reject({ message: `Validation failed: index: ${invalidResult.index}, ${invalidResult.message}` });
+    }
+    return this.bulkDocs(
+      docs.map(doc => this.filterDocFields(doc)),
+      ...args
+    );
   }
 }
 

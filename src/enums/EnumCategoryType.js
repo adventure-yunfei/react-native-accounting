@@ -1,4 +1,4 @@
 export default {
-  Expenditure: 1,
-  Income: 2
+  Group: 1, // 分类分组
+  Real: 2 // 实际分类的类型
 };

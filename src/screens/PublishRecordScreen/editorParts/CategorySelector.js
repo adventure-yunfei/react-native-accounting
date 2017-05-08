@@ -5,6 +5,8 @@ import LabeledItem from './LabeledItem';
 import flatToTree from '../../../utils/flatToTree';
 import utils from '../../../utils';
 import { componentWillApplyProps } from '../../../lib/lifecycle';
+import EnumCategoryType from '../../../enums/EnumCategoryType';
+import EnumCategoryTargetType from '../../../enums/EnumCategoryTargetType';
 
 export const PropKeyCatId = 'categoryId';
 
@@ -22,7 +24,7 @@ export default class CategorySelector extends React.PureComponent {
       this.prepareCategoriesData(categories);
       const currCatId = data[PropKeyCatId];
       if (!currCatId) {
-        const firstValidAccount = categories.find(cat => cat.parentId);
+        const firstValidAccount = utils.findBy(categories, 'type', EnumCategoryType.Real);
         if (firstValidAccount) {
           onPropChange(PropKeyCatId, firstValidAccount._id);
         }

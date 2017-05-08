@@ -12,7 +12,7 @@ import { editorStyles } from './editorParts/editorCommon';
 import connectDB from '../../lib/connectDB';
 import { Colors } from '../../variables';
 import exposeRootNavigation from '../../lib/exposeRootNavigation';
-import EnumCategoryType from '../../enums/EnumCategoryType';
+import EnumCategoryTargetType from '../../enums/EnumCategoryTargetType';
 
 const styles = StyleSheet.create({
   amountInput: {
@@ -34,7 +34,8 @@ export default class PublishExpenditureRecord extends PublishRecordBase {
         <AmountInput {...cmProps} onChange={() => 0} textStyle={styles.amountInput} />
         <CategorySelector
           {...cmProps}
-          categories={categories.filter(cat => cat.type === EnumCategoryType.Expenditure)}
+          categories={categories.filter(cat =>
+            cat.targetType === EnumCategoryTargetType.Expenditure)}
         />
         <AccountSelector {...cmProps} accounts={accounts} />
         <DateSelector {...cmProps} />

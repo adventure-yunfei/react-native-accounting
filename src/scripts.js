@@ -1,5 +1,5 @@
 import databases from './databases';
-import EnumCategoryType from './enums/EnumCategoryType';
+import EnumCategoryTargetType from './enums/EnumCategoryTargetType';
 
 function getId(name, prefix = '') {
   return prefix + name.split('').map(ch => ch.codePointAt(0).toString(36)).join('');
@@ -37,14 +37,16 @@ const expenditureCategoryDocs = generateDocs([
   ['衣服饰品', ['衣服裤子', '鞋帽包包', '化妆饰品']],
   ['行车交通', ['公交车', '打车']],
   ['其他支出', ['其他支出']]
-], item => Object.assign(item, { type: EnumCategoryType.Expenditure }));
+], item => Object.assign(item, { type: EnumCategoryTargetType.Expenditure }));
 
 const incomeCategoryDocs = generateDocs([
   ['职业收入', ['工资', '年终奖', '公积金']],
   ['其他收入', ['利息', '红包', '其他收入']]
-], item => Object.assign(item, { type: EnumCategoryType.Income }));
+], item => Object.assign(item, { type: EnumCategoryTargetType.Income }));
 
 class Shell {
+  databases = databases
+
   initializeAccounts() {
     databases.accounts.validatingBulkDocs(accountDocs);
   }
