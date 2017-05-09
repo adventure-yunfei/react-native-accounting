@@ -1,8 +1,8 @@
 import React, { PropTypes } from 'react';
-import { ScrollView, StyleSheet } from 'react-native';
+import { FlatList, StyleSheet } from 'react-native';
 
 import PeriodSummary from './PeriodSummary';
-import RecordItemList from './RecordItemList';
+import RecordItem from './RecordItem';
 import connectDB from '../../lib/connectDB';
 // import getDate from '../../utils/getDate';
 import EnumRecordType from '../../enums/EnumRecordType';
@@ -103,16 +103,24 @@ export default class Records extends React.PureComponent {
     totalExpenditure: 0
   }
 
+  _keyExtractor = item => item._id
+
+  _renderItem = ({ item }) => <RecordItem detailRecord={item} />
+
   render() {
     // const { navigation: { state: { params: { startTime, endTime } } } } = this.props;
     // const displayType = getType(startTime, endTime);
     const { detailRecords = [] } = this.props;
 
     return (
-      <ScrollView style={styles.container}>
-        <PeriodSummary {...calculateSummary(detailRecords)} />
-        <RecordItemList detailRecords={detailRecords} />
-      </ScrollView>
+      <FlatList
+        style={styles.container}
+        extraData={{ a: 1 }}
+        ListHeaderComponent={() => <PeriodSummary {...calculateSummary(detailRecords)} />}
+        data={detailRecords}
+        keyExtractor={this._keyExtractor}
+        renderItem={this._renderItem}
+      />
     );
   }
 }
