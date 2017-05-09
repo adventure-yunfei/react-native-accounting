@@ -3617,9 +3617,9 @@ pouchdb-abstract-mapreduce@6.2.0:
     pouchdb-promise "6.2.0"
     pouchdb-utils "6.2.0"
 
-pouchdb-adapter-asyncstorage@6.2.0:
-  version "6.2.0"
-  resolved "http://registry.npm.taobao.org/pouchdb-adapter-asyncstorage/download/pouchdb-adapter-asyncstorage-6.2.0.tgz#98bc51f65629e1f48abcb5b155b9556f250e2327"
+pouchdb-adapter-asyncstorage@6.2.2:
+  version "6.2.2"
+  resolved "http://registry.npm.taobao.org/pouchdb-adapter-asyncstorage/download/pouchdb-adapter-asyncstorage-6.2.2.tgz#7d661d02cdf3fadf2d4c937ed4f37dbae81b1566"
   dependencies:
     atob "2.0.3"
     blob-polyfill "1.0.20150320"
@@ -3782,11 +3782,11 @@ pouchdb-promise@6.2.0:
   dependencies:
     lie "3.1.1"
 
-pouchdb-react-native@^6.2.0:
-  version "6.2.0"
-  resolved "http://registry.npm.taobao.org/pouchdb-react-native/download/pouchdb-react-native-6.2.0.tgz#63a7ba7f9467107f7af06e26f5f11debd59816a3"
+pouchdb-react-native@^6.2.2:
+  version "6.2.2"
+  resolved "http://registry.npm.taobao.org/pouchdb-react-native/download/pouchdb-react-native-6.2.2.tgz#25bcce36d5292c122eb9dcda3de2cd0575e703bc"
   dependencies:
-    pouchdb-adapter-asyncstorage "6.2.0"
+    pouchdb-adapter-asyncstorage "6.2.2"
     pouchdb-adapter-http "6.2.0"
     pouchdb-core "6.2.0"
     pouchdb-mapreduce "6.2.0"
