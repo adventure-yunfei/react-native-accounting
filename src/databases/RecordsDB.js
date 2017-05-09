@@ -40,36 +40,5 @@ export default dbManager.createDatabase({
         EnumRecordType.InitLending
       ])
     })
-  ]),
-
-  views: {
-    amountGroupByAccounts: {
-      /* global emit,__RECORD_TYPE_EXPENDITURE__,__RECORD_TYPE_INCOME__,__RECORD_TYPE_TRANSFER__,
-      __RECORD_TYPE_INIT_AMOUNT__,__RECORD_TYPE_INIT_BORROWING__,__RECORD_TYPE_INIT_LENDING__ */
-      /* eslint func-names: off */
-      map: function (doc) {
-        if (doc.type === __RECORD_TYPE_EXPENDITURE__) {
-          emit(doc.accountId, -doc.amount);
-        } else if (doc.type === __RECORD_TYPE_INCOME__) {
-          emit(doc.accountId, doc.amount);
-        } else if (doc.type === __RECORD_TYPE_TRANSFER__) {
-          emit(doc.accountId, -doc.amount);
-          emit(doc.toAccountId, doc.amount);
-        } else if (doc.type === __RECORD_TYPE_INIT_AMOUNT__) {
-          emit(doc.accountId, doc.amount);
-        } else if (doc.type === __RECORD_TYPE_INIT_BORROWING__) {
-          emit(doc.accountId, -doc.amount);
-        } else if (doc.type === __RECORD_TYPE_INIT_LENDING__) {
-          emit(doc.accountId, doc.amount);
-        }
-      }.toString()
-        .replace('__RECORD_TYPE_EXPENDITURE__', EnumRecordType.Expenditure)
-        .replace('__RECORD_TYPE_INCOME__', EnumRecordType.Income)
-        .replace('__RECORD_TYPE_TRANSFER__', EnumRecordType.Transfer)
-        .replace('__RECORD_TYPE_INIT_AMOUNT__', EnumRecordType.InitAmount)
-        .replace('__RECORD_TYPE_INIT_BORROWING__', EnumRecordType.InitBorrowing)
-        .replace('__RECORD_TYPE_INIT_LENDING__', EnumRecordType.InitLending),
-      reduce: '_sum'
-    }
-  }
+  ])
 });

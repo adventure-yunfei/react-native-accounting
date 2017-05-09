@@ -92,10 +92,20 @@ export default class RecordItem extends React.PureComponent {
     const { detailRecord } = this.props;
     const mDate = moment(detailRecord.timestamp);
     const amountStyle = [styles.amount];
+    let descTitle = null;
     switch (detailRecord.type) {
-      case EnumRecordType.Expenditure: amountStyle.push(styles.amount_expenditure); break;
-      case EnumRecordType.Income: amountStyle.push(styles.amount_income); break;
-      case EnumRecordType.Transfer: amountStyle.push(styles.amount_transfer); break;
+      case EnumRecordType.Expenditure:
+        amountStyle.push(styles.amount_expenditure);
+        descTitle = detailRecord.categoryName;
+        break;
+      case EnumRecordType.Income:
+        amountStyle.push(styles.amount_income);
+        descTitle = detailRecord.categoryName;
+        break;
+      case EnumRecordType.Transfer:
+        amountStyle.push(styles.amount_transfer);
+        descTitle = `${detailRecord.accountName} -> ${detailRecord.toAccountName}`;
+        break;
       default: break;
     }
     const swipeRightButtons = [
@@ -123,7 +133,7 @@ export default class RecordItem extends React.PureComponent {
             </View>
             <Icon size={47} name="camera-alt" color="#D2D2D2" />
             <View style={styles.desc}>
-              <BaseText style={styles.desc__cat}>{detailRecord.categoryName}</BaseText>
+              <BaseText style={styles.desc__cat}>{descTitle}</BaseText>
               <BaseText style={styles.desc__note}>{detailRecord.remark}</BaseText>
             </View>
             <BaseText style={amountStyle}>

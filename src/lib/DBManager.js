@@ -1,9 +1,8 @@
-import forEach from 'lodash/forEach';
 import pick from 'lodash/pick';
 import map from 'lodash/map';
 import PouchDB from 'pouchdb-react-native';
 import pouchdbFind from 'pouchdb-find';
-import { compile, validate, createImmutableSchemaData } from 'immutable-json-schema';
+import { validate, createImmutableSchemaData } from 'immutable-json-schema';
 import shortid from 'shortid';
 
 PouchDB.plugin(pouchdbFind);
@@ -63,7 +62,17 @@ class ExtendedPouchDB extends PouchDB {
       ...options,
       include_docs: true
     })
-      .then(result => result.rows.map(item => item.doc));
+      .then((result) => {
+        if (options.include_ddocs) {
+          return result.rows.map(({ doc }) => doc);
+        }
+        return result.rows.reduce((acc, { doc }) => {
+          if (!isDesignDoc(doc)) {
+            acc.push(doc);
+          }
+          return acc;
+        }, []);
+      });
   }
   validateDoc(doc) {
     if (doc._deleted && isDesignDoc(doc)) {

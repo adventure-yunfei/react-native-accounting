@@ -2,8 +2,10 @@ import React, { PropTypes } from 'react';
 import { TabNavigator, TabBarTop } from 'react-navigation';
 import map from 'lodash/map';
 import sortBy from 'lodash/sortBy';
+import reduce from 'lodash/reduce';
 
 import connectDB from '../../lib/connectDB';
+import dbGetters from '../../lib/dbGetters';
 import ChartView from './ChartView';
 import { getMonthPeriod } from '../../utils/period';
 import utils from '../../utils';
@@ -82,17 +84,19 @@ class IncomeByCategoriesChart extends React.PureComponent {
 }
 
 @connectDB(dbs => Promise.all([
-  dbs.records.query('amountGroupByAccounts', { group: true }),
+  dbGetters.getAmountByAccounts(),
   dbs.accounts.allDocsData()
-]).then(([accountAmountsRes, accounts]) => {
+]).then(([accountAmounts, accounts]) => {
   const accountNameMap = utils.arrayToMap(accounts, '_id', 'name');
   const chartData = sortBy(
-    accountAmountsRes.rows.filter(({ value }) => value),
+    reduce(accountAmounts, (acc, amount, accountId) => {
+      if (amount) {
+        acc.push({ value: amount, label: accountNameMap[accountId] });
+      }
+      return acc;
+    }, []),
     'value'
-  ).map(({ key, value }) => ({
-    value,
-    label: accountNameMap[key]
-  }));
+  );
   return { chartData };
 }))
 class AccountAssetsChart extends React.PureComponent {

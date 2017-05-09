@@ -68,19 +68,29 @@ const styles = StyleSheet.create({
   const { state: { params: { startTime, endTime } } } = navigation;
   return Promise.all([
     dbs.categories.allDocsData(),
+    dbs.accounts.allDocsData(),
     dbs.records.allDocsData({
       descending: true,
       startkey: endTime.toString(),
       endkey: startTime.toString()
     })
-  ]).then(([categories, records]) => {
+  ]).then(([categories, accounts, records]) => {
     const catMap = utils.arrayToMap(categories, '_id');
+    const accountMap = utils.arrayToMap(accounts, '_id');
     return {
-      detailRecords: records
-        .map(record => ({
-          ...record,
-          categoryName: record.categoryId ? catMap[record.categoryId].name : null
-        }))
+      detailRecords: records.map((record) => {
+        const detailRecord = Object.assign({}, record);
+        if (detailRecord.categoryId) {
+          detailRecord.categoryName = catMap[record.categoryId].name;
+        }
+        if (detailRecord.accountId) {
+          detailRecord.accountName = accountMap[detailRecord.accountId].name;
+        }
+        if (detailRecord.toAccountId) {
+          detailRecord.toAccountName = accountMap[detailRecord.toAccountId].name;
+        }
+        return detailRecord;
+      })
     };
   });
 })

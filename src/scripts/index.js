@@ -4,7 +4,7 @@ import clearDBs from './clearDBs';
 import initializeFromFeidee from './initializeFromFeidee';
 import exampleData from './exampleData';
 
-export default global.__shell = {
+export default global._shell = {
   PouchDB,
 
   databases,

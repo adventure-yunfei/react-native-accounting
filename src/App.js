@@ -15,6 +15,7 @@ import { argumentNavigatorRouter } from './lib/navigationExt';
 import { Colors } from './variables';
 import { initializeDBs } from './databases';
 import './scripts';
+import './dev';
 
 const styles = StyleSheet.create({
   header: {

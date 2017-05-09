@@ -28,33 +28,59 @@ const PeriodSummaryType = PropTypes.shape({
 
 @connectDB((dbs) => {
   const now = Date.now();
-  const queryPeriodSummary = period => dbs.records.find({
+  const { startTime: dayStartTime } = getDayPeriod(now);
+  const { startTime: weekStartTime } = getWeekPeriod(now);
+  const { startTime: monthStartTime } = getMonthPeriod(now);
+  const { startTime: yearStartTime, endTime: yearEndTime } = getYearPeriod(now);
+  return dbs.records.find({
     selector: {
       _id: {
-        $gte: period.startTime.toString(),
-        $lte: period.endTime.toString()
+        $gte: yearStartTime.toString(),
+        $lte: yearEndTime.toString()
       }
     }
-  }).then((recordsRes) => {
-    let expenditure = 0;
-    let income = 0;
-    recordsRes.docs.forEach(({ type, amount }) => {
+  }).then(({ docs }) => {
+    let dayIn = 0;
+    let dayExp = 0;
+    let weekIn = 0;
+    let weekExp = 0;
+    let monthIn = 0;
+    let monthExp = 0;
+    let yearIn = 0;
+    let yearExp = 0;
+    docs.forEach(({ type, amount, timestamp }) => {
       if (type === EnumRecordType.Expenditure) {
-        expenditure += amount;
+        if (timestamp >= dayStartTime) {
+          dayExp += amount;
+        }
+        if (timestamp >= weekStartTime) {
+          weekExp += amount;
+        }
+        if (timestamp >= monthStartTime) {
+          monthExp += amount;
+        }
+        yearExp += amount;
       } else if (type === EnumRecordType.Income) {
-        income += amount;
+        if (timestamp >= dayStartTime) {
+          dayIn += amount;
+        }
+        if (timestamp >= weekStartTime) {
+          weekIn += amount;
+        }
+        if (timestamp >= monthStartTime) {
+          monthIn += amount;
+        }
+        yearIn += amount;
       }
     });
-    return { expenditure, income };
+    const getSummary = (income, expenditure) => ({ income, expenditure });
+    return {
+      daySummary: getSummary(dayIn, dayExp),
+      weekSummary: getSummary(weekIn, weekExp),
+      monthSummary: getSummary(monthIn, monthExp),
+      yearSummary: getSummary(yearIn, yearExp)
+    };
   });
-  return Promise.all([
-    queryPeriodSummary(getDayPeriod(now)),
-    queryPeriodSummary(getWeekPeriod(now)),
-    queryPeriodSummary(getMonthPeriod(now)),
-    queryPeriodSummary(getYearPeriod(now))
-  ]).then(([daySummary, weekSummary, monthSummary, yearSummary]) => ({
-    daySummary, weekSummary, monthSummary, yearSummary
-  }));
 })
 export default class HomeScreen extends React.PureComponent {
   static propTypes = {

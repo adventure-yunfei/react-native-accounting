@@ -7,6 +7,7 @@ import AccountsSummary from './AccountsSummary';
 import flatToTree from '../../utils/flatToTree';
 import utils from '../../utils';
 import connectDB from '../../lib/connectDB';
+import dbGetters from '../../lib/dbGetters';
 import { Colors } from '../../variables';
 
 const styles = StyleSheet.create({
@@ -72,13 +73,12 @@ const styles = StyleSheet.create({
 
 @connectDB(dbs => Promise.all([
   dbs.accounts.allDocsData(),
-  dbs.records.query('amountGroupByAccounts', { group: true })
-]).then(([accounts, accountAmountsRes]) => {
+  dbGetters.getAmountByAccounts()
+]).then(([accounts, accountAmounts]) => {
   let netAssets = 0;
-  const amountMap = utils.arrayToMap(accountAmountsRes.rows, 'key', 'value');
   const accountDetailGroups = flatToTree(accounts, account => ({
     ...account,
-    amount: amountMap[account._id] || 0
+    amount: accountAmounts[account._id] || 0
   }));
   accountDetailGroups.forEach((group) => {
     /* eslint no-param-reassign: off */
