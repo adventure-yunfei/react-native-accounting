@@ -1,6 +1,6 @@
 import React from 'react';
 import { StackNavigator } from 'react-navigation';
-import { TouchableOpacity, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from 'react-native-elements/src/icons/Icon';
 
 import './setupApp';
@@ -13,6 +13,7 @@ import ChartScreen from './screens/ChartScreen';
 import { provideRootNavigationContext } from './lib/exposeRootNavigation';
 import { argumentNavigatorRouter } from './lib/navigationExt';
 import { Colors } from './variables';
+import { initializeDBs } from './databases';
 import './scripts';
 
 const styles = StyleSheet.create({
@@ -74,4 +75,15 @@ const App = argumentNavigatorRouter(StackNavigator(
 
 App.displayName = `App-${App.name || App.displayName}`;
 
-export default App;
+export default class AppWrapper extends React.PureComponent {
+  state = { dbsReady: false }
+  componentWillMount() {
+    initializeDBs().then(() => this.setState({ dbsReady: true }));
+  }
+  render() {
+    if (!this.state.dbsReady) {
+      return <View />;
+    }
+    return <App {...this.props} />;
+  }
+}

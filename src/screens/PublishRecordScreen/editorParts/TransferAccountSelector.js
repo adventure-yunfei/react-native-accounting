@@ -109,7 +109,8 @@ export default class TransferAccountSelector extends React.PureComponent {
       <Picker
         triggerType="onPress" onPickerChange={this.onPickerChange} onChange={this.onChange} cascade={false}
         data={[availableAccounts, availableAccounts]}
-        value={fromAccountId && toAccountId && [fromAccountId, toAccountId]}
+        value={fromAccountId && toAccountId && !!availableAccounts.length
+          && [fromAccountId, toAccountId]}
       >
         <TouchableHighlight>
           <View style={[editorStyles.row, styles.container]}>

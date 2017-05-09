@@ -1,5 +1,6 @@
 import forEach from 'lodash/forEach';
 import pick from 'lodash/pick';
+import map from 'lodash/map';
 import PouchDB from 'pouchdb-react-native';
 import pouchdbFind from 'pouchdb-find';
 import { compile, validate, createImmutableSchemaData } from 'immutable-json-schema';
@@ -7,13 +8,12 @@ import shortid from 'shortid';
 
 PouchDB.plugin(pouchdbFind);
 
-const isNotDDoc = doc => doc._id && doc._id.startsWith('_design');
 const isDesignDoc = doc => doc._id && doc._id.startsWith('_design');
 
 class ExtendedPouchDB extends PouchDB {
-  initExtendedOpts({ schema, generateID = null } = {}) {
+  initExtendedOpts({ schema, views = null, generateID = null } = {}) {
     this.$schema = schema;
-    this.$bulkSchema = compile([schema]);
+    this.$viewsConfig = views;
     if (generateID) {
       if (typeof generateID === 'function') {
         this.generateID = generateID;
@@ -27,6 +27,33 @@ class ExtendedPouchDB extends PouchDB {
         };
       }
     }
+  }
+  initializeDB() {
+    const initializeViews = () => {
+      const createViewDesignDoc = (viewCfg, viewName) => {
+        const viewDesignDoc = {
+          _id: `_design/${viewName}`,
+          views: {
+            [viewName]: viewCfg
+          }
+        };
+        return this.put(viewDesignDoc)
+          .catch((err) => {
+            if (err.name !== 'conflict') {
+              throw err;
+            }
+            // else ignore if doc already exists
+          });
+      };
+      if (!this.$viewsConfig) {
+        return Promise.resolve();
+      }
+      return Promise.all(map(this.$viewsConfig, createViewDesignDoc));
+    };
+    return Promise.all([
+      initializeViews(),
+      () => this.info()
+    ]);
   }
   generateID() {
     return [shortid(), shortid(), shortid()].join('-');
@@ -89,24 +116,6 @@ class ExtendedPouchDB extends PouchDB {
 }
 
 export default class DBManager {
-  static createViewDesignDoc(db, name, viewCfg) {
-    const viewDesignDoc = {
-      _id: `_design/${name}`,
-      views: {
-        [name]: viewCfg
-      }
-    };
-    // TODO: 非常奇怪的行为，添加 pouchdb-find 插件并使用 .find 后，创建 design doc 必须变成异步才会成功
-    return new Promise(resolve => setTimeout(resolve, 500))
-      .then(() => db.put(viewDesignDoc))
-      .catch((err) => {
-        if (err.name !== 'conflict') {
-          throw err;
-        }
-        // else ignore if doc already exists
-      });
-  }
-
   constructor({ prefix = '', remoteCouchdbHost }) {
     this.databases = {};
 
@@ -120,15 +129,10 @@ export default class DBManager {
       name: actualDBName,
       ...options
     });
-    db.initExtendedOpts({ schema, generateID });
+    db.initExtendedOpts({ schema, generateID, views });
     if (this._remoteCouchdbHost) {
       PouchDB.sync(actualDBName, this._remoteCouchdbHost + actualDBName, {
         live: true
-      });
-    }
-    if (views) {
-      forEach(views, (viewCfg, viewName) => {
-        DBManager.createViewDesignDoc(db, viewName, viewCfg);
       });
     }
     this.databases[name] = db;

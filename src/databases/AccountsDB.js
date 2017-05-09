@@ -8,7 +8,7 @@ const accountCommonSrc = {
   name: 'string'
 };
 
-dbManager.createDatabase({
+export default dbManager.createDatabase({
   name: 'accounts',
   schema: compileAnyOf([
     compile({

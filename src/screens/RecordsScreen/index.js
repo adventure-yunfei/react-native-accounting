@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
       detailRecords: records
         .map(record => ({
           ...record,
-          categoryName: catMap[record.categoryId].name
+          categoryName: record.categoryId ? catMap[record.categoryId].name : null
         }))
     };
   });
