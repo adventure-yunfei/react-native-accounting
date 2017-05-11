@@ -64,6 +64,9 @@ const styles = StyleSheet.create({
   },
   amount_transfer: {
     color: Colors.Transfer
+  },
+  amount_init: {
+    color: Colors.Text_Hint
   }
 });
 
@@ -105,6 +108,18 @@ export default class RecordItem extends React.PureComponent {
       case EnumRecordType.Transfer:
         amountStyle.push(styles.amount_transfer);
         descTitle = `${detailRecord.accountName} -> ${detailRecord.toAccountName}`;
+        break;
+      case EnumRecordType.InitAmount:
+        amountStyle.push(styles.amount_init);
+        descTitle = '余额变更';
+        break;
+      case EnumRecordType.InitBorrowing:
+        amountStyle.push(styles.amount_init);
+        descTitle = '负债变更';
+        break;
+      case EnumRecordType.InitLending:
+        amountStyle.push(styles.amount_init);
+        descTitle = '债券变更';
         break;
       default: break;
     }

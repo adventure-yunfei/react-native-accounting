@@ -1,9 +1,11 @@
+import './setupApp';
+
+/* eslint import/first:off */
 import React from 'react';
 import { StackNavigator } from 'react-navigation';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from 'react-native-elements/src/icons/Icon';
 
-import './setupApp';
 import HomeScreen from './screens/HomeScreen';
 import AccountsScreen from './screens/AccountsScreen';
 import RecordsScreen from './screens/RecordsScreen';
@@ -58,8 +60,8 @@ const App = argumentNavigatorRouter(StackNavigator(
     headerMode: 'screen',
     initialRouteName: 'Home',
     initialRouteParams: {
-      startTime: Date.now() - (7 * 24 * 60 * 60 * 1000),
-      endTime: Date.now()
+      startTime: 1488297600000,
+      endTime: 1490975999999
     },
     navigationOptions: ({ navigation }) => ({
       headerStyle: styles.header,

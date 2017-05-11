@@ -43,17 +43,21 @@ const styles = StyleSheet.create({
 
 export default class PeriodSummary extends React.PureComponent {
   static propTypes = {
-    balance: PropTypes.number.isRequired,
-    income: PropTypes.number.isRequired,
-    expenditure: PropTypes.number.isRequired
+    income: PropTypes.number,
+    expenditure: PropTypes.number
+  }
+
+  static defaultProps = {
+    income: 0,
+    expenditure: 0
   }
 
   render() {
-    const { balance, income, expenditure } = this.props;
+    const { income, expenditure } = this.props;
     return (
       <View style={styles.rootContainer}>
         <View style={styles.primaryContainer}>
-          <BaseText style={styles.primaryAmount}>{balance.toFixed(2)}</BaseText>
+          <BaseText style={styles.primaryAmount}>{(income - expenditure).toFixed(2)}</BaseText>
           <BaseText style={styles.descLabel}>结余</BaseText>
         </View>
         <View style={styles.secondaryContainer}>

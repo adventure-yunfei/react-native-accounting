@@ -1,11 +1,9 @@
 import React from 'react';
 import hoistNonReactStatic from 'hoist-non-react-statics';
-import omit from 'lodash/omit';
 
 import databases from '../databases';
 
 const dbChanges = {};
-const KeyNoListenChanges = '$noListenChanges';
 
 class ReadOnlyDB {
   constructor(db, dbName, dataCalls) {
@@ -38,7 +36,7 @@ class ReadOnlyDB {
   }
 }
 
-function getReadOnlyDBs() {
+export function getReadOnlyDBs() {
   const result = {
     __dataCalls: [] // Record fetch data calls
   };
@@ -68,7 +66,7 @@ function listenToDBChanges(dataCalls, callback) {
   };
 }
 
-export default function connectDB(mapDBsToProps) {
+export default function connectDB(mapDBsToProps, { listenChanges = true } = {}) {
   return (ViewComponent) => {
     class DBConnectWrapper extends React.PureComponent {
       state = {
@@ -86,9 +84,9 @@ export default function connectDB(mapDBsToProps) {
                 if (this.__unlistenDBChanges) {
                   this.__unlistenDBChanges();
                 }
-                this.__unlistenDBChanges = data[KeyNoListenChanges] ?
-                  null : listenToDBChanges(dbs.__dataCalls, doMapDBs);
-                this.setState(omit(data, [KeyNoListenChanges]));
+                this.__unlistenDBChanges
+                  = listenChanges ? listenToDBChanges(dbs.__dataCalls, doMapDBs) : null;
+                this.setState(data);
               }
             });
         };

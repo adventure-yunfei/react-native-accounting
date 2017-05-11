@@ -10,6 +10,7 @@ const accountCommonSrc = {
 
 export default dbManager.createDatabase({
   name: 'accounts',
+
   schema: compileAnyOf([
     compile({
       ...accountCommonSrc,

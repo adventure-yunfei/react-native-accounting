@@ -1,18 +1,24 @@
 import moment from 'moment';
 import 'moment/locale/zh-cn';
+import Promise from 'beauty-promise';
 
 moment.locale('zh-cn');
 
-// DEV
-// 移除 db.type 废弃警告
-/* eslint-disable */
-const PouchDB = require('pouchdb-core');
-/* eslint-enable */
-Object.defineProperty(PouchDB.prototype, '_remote', {
-  get() {
-    return typeof this.__remote === 'boolean' ? this.__remote : this.type() === 'http';
-  },
-  set(val) {
-    this.__remote = val;
+global.Promise = Promise;
+
+Promise.onUnhandledRejection = function (reason) {
+  const msgs = [];
+  if (reason == null) {
+    msgs.push(String(reason));
+  } else if (typeof reason === 'object' && (reason.message || reason.stack)) {
+    if (reason.message) {
+      msgs.push(`message: ${reason.message}`);
+    }
+    if (reason.stack) {
+      msgs.push(`stack: ${reason.stack}`);
+    }
+  } else {
+    msgs.push(reason);
   }
-});
+  console.warn(`Possible Unhandled Promise Rejection: ${msgs.join('\n')}`);
+};

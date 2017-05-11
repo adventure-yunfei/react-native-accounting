@@ -8,6 +8,7 @@ import shortid from 'shortid';
 PouchDB.plugin(pouchdbFind);
 
 const isDesignDoc = doc => doc._id && doc._id.startsWith('_design');
+const isNotDesignDoc = doc => !isDesignDoc(doc);
 
 class ExtendedPouchDB extends PouchDB {
   initExtendedOpts({ schema, views = null, generateID = null } = {}) {
@@ -49,13 +50,22 @@ class ExtendedPouchDB extends PouchDB {
       }
       return Promise.all(map(this.$viewsConfig, createViewDesignDoc));
     };
-    return Promise.all([
-      initializeViews(),
-      () => this.info()
-    ]);
+    return initializeViews();
   }
   generateID() {
     return [shortid(), shortid(), shortid()].join('-');
+  }
+  findData(options = {}) {
+    return this.find(options)
+      .then((res) => {
+        if (options.include_ddocs) {
+          return res;
+        }
+        return {
+          ...res,
+          docs: res.docs.filter(isNotDesignDoc)
+        };
+      });
   }
   allDocsData(options = {}) {
     return this.allDocs({
@@ -73,6 +83,15 @@ class ExtendedPouchDB extends PouchDB {
           return acc;
         }, []);
       });
+  }
+  $changes() {
+    if (!this.__liveChanges) {
+      this.__liveChanges = this.changes({
+        live: true,
+        since: 'now'
+      });
+    }
+    return this.__liveChanges;
   }
   validateDoc(doc) {
     if (doc._deleted && isDesignDoc(doc)) {

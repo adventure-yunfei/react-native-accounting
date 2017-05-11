@@ -12,6 +12,8 @@ module.exports = {
     "class-methods-use-this": "off",
     // Default props doesn't always make sense (i.e. I want to check whether the prop is provided)
     "react/require-default-props": "off",
+    // "if" statement seperates codes of different conditions. It's intuitive with lonely "if" in that case
+    "no-lonely-if": "off",
 
 
     // ### Following are my own coding preference ###
