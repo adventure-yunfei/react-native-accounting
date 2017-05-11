@@ -4,7 +4,7 @@ import './setupApp';
 import React from 'react';
 import { StackNavigator } from 'react-navigation';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
-import Icon from 'react-native-elements/src/icons/Icon';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import HomeScreen from './screens/HomeScreen';
 import AccountsScreen from './screens/AccountsScreen';
@@ -67,7 +67,7 @@ const App = argumentNavigatorRouter(StackNavigator(
       headerStyle: styles.header,
       headerLeft: (
         <TouchableOpacity style={styles.headerLeft} onPress={() => navigation.goBack()} >
-          <Icon
+          <MaterialIcons
             name="arrow-back" color="#725715" size={28}
           />
         </TouchableOpacity>

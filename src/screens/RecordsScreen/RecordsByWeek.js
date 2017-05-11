@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import { FlatList, View, StyleSheet } from 'react-native';
-import Icon from 'react-native-elements/src/icons/Icon';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import BaseText from '../../components/BaseText';
 import PeriodSummary from './PeriodSummary';
@@ -56,7 +56,7 @@ export default class RecordsByWeek extends React.PureComponent {
       <View style={styles.emptyTip}>
         {this._getHeaderComponent()()}
         <View style={styles.emptyTip__labelContainer}>
-          <Icon size={100} type="material-community" name="newspaper" color={Colors.Text_Hint} />
+          <MaterialCommunityIcons size={100} name="newspaper" color={Colors.Text_Hint} />
           <BaseText style={styles.emptyTip__label}>暂无记录</BaseText>
         </View>
       </View>

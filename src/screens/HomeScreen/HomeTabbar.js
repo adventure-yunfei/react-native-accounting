@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import Tabbar from 'react-native-tabbar';
-import Icon from 'react-native-elements/src/icons/Icon';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import BaseText from '../../components/BaseText';
 import exposeRootNavigation from '../../lib/exposeRootNavigation';
@@ -39,7 +39,7 @@ class TabbarItem extends React.PureComponent {
     return (
       <TouchableOpacity onPress={onPress}>
         <View style={styles.tabbarItem}>
-          <Icon name={iconName} color="#fff" size={24} />
+          <MaterialIcons name={iconName} color="#fff" size={24} />
           <BaseText style={styles.tabbarItem__text}>{label}</BaseText>
         </View>
       </TouchableOpacity>

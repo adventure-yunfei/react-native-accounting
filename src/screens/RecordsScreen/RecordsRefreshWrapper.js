@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import { TouchableWithoutFeedback, ScrollView, View, StyleSheet } from 'react-native';
-import Icon from 'react-native-elements/src/icons/Icon';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import BaseText from '../../components/BaseText';
 import { Colors } from '../../variables';
@@ -75,7 +75,7 @@ export default class PullUpToRefresh extends React.PureComponent {
         >
           {this.props.children}
           <View style={pullUpRefreshStyles.bottomRefresh}>
-            <Icon color={Colors.Text_Hint} name={canFireBottomLoading ? 'arrow-downward' : 'arrow-upward'} />
+            <MaterialIcons size={24} color={Colors.Text_Hint} name={canFireBottomLoading ? 'arrow-downward' : 'arrow-upward'} />
             <BaseText style={pullUpRefreshStyles.bottomRefresh__label}>{canFireBottomLoading ? '放开加载' : '上拉加载更多'}</BaseText>
           </View>
         </ScrollView>

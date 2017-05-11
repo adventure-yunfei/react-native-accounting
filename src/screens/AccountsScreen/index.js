@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
-import Icon from 'react-native-elements/src/icons/Icon';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import BaseText from '../../components/BaseText';
 import AccountsSummary from './AccountsSummary';
@@ -107,7 +107,7 @@ export default class Accounts extends React.PureComponent {
         </View>
         {accountGrp.children.map((account, idx) => (
           <View key={account._id} style={styles.accountRow}>
-            <Icon size={37} containerStyle={styles.accountRow__leftIcon} name="credit-card" color="#AAA" />
+            <MaterialIcons size={37} style={styles.accountRow__leftIcon} name="credit-card" color="#AAA" />
             <View
               style={[
                 styles.accountRow__contentContainer,
@@ -116,7 +116,7 @@ export default class Accounts extends React.PureComponent {
             >
               <BaseText style={styles.accountRow__mainText}>{account.name}</BaseText>
               <BaseText style={styles.accountRow__amount}>{account.amount}</BaseText>
-              <Icon name="keyboard-arrow-right" size={22} color="#D2D2D2" containerStyle={styles.accountRow__rightIcon} />
+              <MaterialIcons name="keyboard-arrow-right" size={22} color="#D2D2D2" style={styles.accountRow__rightIcon} />
             </View>
           </View>
         ))}

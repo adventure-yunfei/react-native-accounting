@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import { View, TouchableHighlight, StyleSheet } from 'react-native';
 import moment from 'moment';
-import Icon from 'react-native-elements/src/icons/Icon';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import BaseText from '../../components/BaseText';
 import { getDayPeriod, getWeekPeriod, getMonthPeriod, getYearPeriod } from '../../utils/period';
@@ -64,7 +64,7 @@ class DetailRow extends React.PureComponent {
     return (
       <TouchableHighlight onPress={onPress} underlayColor="#f1f1f1">
         <View style={styles.detailRow} >
-          <Icon color="#C3C5C9" name={icon} size={37} containerStyle={styles.detailRowMainIcon} />
+          <MaterialIcons color="#C3C5C9" name={icon} size={37} style={styles.detailRowMainIcon} />
 
           <View style={styles.rightContentBox}>
             <View>
@@ -75,7 +75,7 @@ class DetailRow extends React.PureComponent {
               <BaseText style={styles.expenditureAmount}>{expenditure.toFixed(2)}</BaseText>
               <BaseText style={styles.incomeAmount}>{income.toFixed(2)}</BaseText>
             </View>
-            <Icon name="keyboard-arrow-right" size={22} color="#D2D2D2" containerStyle={styles.rightArrowIconContainer} />
+            <MaterialIcons name="keyboard-arrow-right" size={22} color="#D2D2D2" style={styles.rightArrowIconContainer} />
           </View>
 
         </View>
