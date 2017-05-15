@@ -4,6 +4,7 @@ import PouchDB from '../vendor-fix/pouchdb-react-native';
 import pouchdbFind from 'pouchdb-find';
 import { validate, createImmutableSchemaData } from 'immutable-json-schema';
 import shortid from 'shortid';
+import onError from '../lib/onError';
 
 PouchDB.plugin(pouchdbFind);
 
@@ -161,7 +162,7 @@ export default class DBManager {
     if (this._remoteCouchdbHost) {
       PouchDB.sync(actualDBName, this._remoteCouchdbHost + actualDBName, {
         live: true
-      });
+      }).on('error', onError);
     }
     this.databases[name] = db;
     this[name] = db;

@@ -2,6 +2,7 @@ import React from 'react';
 import hoistNonReactStatic from 'hoist-non-react-statics';
 
 import databases from '../databases';
+import onError from '../lib/onError';
 
 const dbChanges = {};
 
@@ -88,7 +89,8 @@ export default function connectDB(mapDBsToProps, { listenChanges = true } = {}) 
                   = listenChanges ? listenToDBChanges(dbs.__dataCalls, doMapDBs) : null;
                 this.setState(data);
               }
-            });
+            })
+            .catch(onError);
         };
         doMapDBs();
       }

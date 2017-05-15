@@ -13,6 +13,7 @@ import { Colors } from '../../variables';
 import EnumRecordType from '../../enums/EnumRecordType';
 import CustomPropTypes from '../../lib/CustomPropTypes';
 import { navigationExt } from '../../lib/navigationExt';
+import onError from '../../lib/onError';
 
 const styles = StyleSheet.create({
   amountInput: {
@@ -66,7 +67,8 @@ export default class PublishRecordBase extends React.PureComponent {
     })
       .then(() => {
         navigationExt(rootNavigation).replace('Records', getDayPeriod());
-      });
+      })
+      .catch(onError);
   }
 
   onPublishAgain = () => {
