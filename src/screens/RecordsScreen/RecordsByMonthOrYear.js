@@ -124,6 +124,11 @@ class SectionalRecords extends React.PureComponent {
 
   state = { activeIndex: 0 }
 
+  onTopRefresh = () => {
+    const { navigation, endTime, getPeriod } = this.props;
+    navigation.setParams(getPeriod(endTime + 1));
+  }
+
   onBottomRefresh = () => {
     const { navigation, startTime, getPeriod } = this.props;
     navigation.setParams(getPeriod(startTime - 1));
@@ -138,7 +143,11 @@ class SectionalRecords extends React.PureComponent {
 
   _renderItem = ({ item }) => <RecordItem detailRecord={item} />
   _renderScrollComponent = props => (
-    <BottomRefreshableScrollView {...props} onBottomRefresh={this.onBottomRefresh} />
+    <BottomRefreshableScrollView
+      {...props}
+      onTopRefresh={this.onTopRefresh}
+      onBottomRefresh={this.onBottomRefresh}
+    />
   )
   _keyExtractor = item => item._id
 

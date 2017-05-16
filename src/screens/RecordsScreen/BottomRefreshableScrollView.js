@@ -5,7 +5,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import BaseText from '../../components/BaseText';
 import { Colors } from '../../variables';
 
-const BottomRefreshHeight = 40;
+const RefreshCtrlHeight = 40;
 
 const styles = StyleSheet.create({
   srollContainer: {
@@ -14,37 +14,58 @@ const styles = StyleSheet.create({
   scrollContent: {
     minHeight: '100%'
   },
-  bottomRefresh: {
-    position: 'absolute',
-    top: '100%',
-    left: 0,
-    marginTop: -1,
+  refreshCtrl: {
     width: '100%',
-    height: BottomRefreshHeight,
+    height: RefreshCtrlHeight,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: Colors.BG_Default
   },
-  bottomRefresh__label: {
+  refreshCtrl__label: {
     paddingLeft: 16,
     color: Colors.Text_Hint
+  },
+  bottomRefreshCtrl: {
+    position: 'absolute',
+    top: '100%',
+    left: 0,
+    marginTop: -1
+  },
+  topRefreshCtrl: {
+    position: 'absolute',
+    top: -(RefreshCtrlHeight - 1),
+    left: 0
   }
 });
 
 export default class BottomRefreshableScrollView extends React.Component {
   static propTypes = {
     ...ScrollView.propTypes,
+    onTopRefresh: PropTypes.func,
     onBottomRefresh: PropTypes.func
   }
-  state = { canFireBottomLoading: false }
+  state = {
+    canFireTopLoading: false,
+    canFireBottomLoading: false
+  }
 
   onScroll = (evt) => {
     const { onScroll } = this.props;
-    const { canFireBottomLoading } = this.state;
-    const threshold = BottomRefreshHeight * 1.5;
+    const { canFireTopLoading, canFireBottomLoading } = this.state;
+    const threshold = RefreshCtrlHeight * 1.5;
     const { contentOffset, contentSize, layoutMeasurement } = evt.nativeEvent;
     const bottomOffset = contentSize.height - layoutMeasurement.height - contentOffset.y;
+    if (canFireTopLoading) {
+      if (contentOffset.y >= -threshold) {
+        this.setState({ canFireTopLoading: false });
+      }
+    } else {
+      if (contentOffset.y < -threshold) {
+        this.setState({ canFireTopLoading: true });
+      }
+    }
+
     if (canFireBottomLoading) {
       if (bottomOffset >= -threshold) {
         this.setState({ canFireBottomLoading: false });
@@ -61,8 +82,13 @@ export default class BottomRefreshableScrollView extends React.Component {
   }
 
   onPressOut = () => {
-    if (this.state.canFireBottomLoading) {
-      const { onBottomRefresh } = this.props;
+    const { canFireTopLoading, canFireBottomLoading } = this.state;
+    const { onTopRefresh, onBottomRefresh } = this.props;
+    if (canFireTopLoading) {
+      if (onTopRefresh) {
+        onTopRefresh();
+      }
+    } else if (canFireBottomLoading) {
       if (onBottomRefresh) {
         onBottomRefresh();
       }
@@ -71,7 +97,7 @@ export default class BottomRefreshableScrollView extends React.Component {
 
   render() {
     const { style, contentContainerStyle, children, scrollEventThrottle = 16 } = this.props;
-    const { canFireBottomLoading } = this.state;
+    const { canFireTopLoading, canFireBottomLoading } = this.state;
     return (
       <TouchableWithoutFeedback onPressOut={this.onPressOut}>
         <ScrollView
@@ -81,10 +107,14 @@ export default class BottomRefreshableScrollView extends React.Component {
           style={[style, styles.srollContainer]}
           contentContainerStyle={[contentContainerStyle, styles.scrollContent]}
         >
+          <View style={[styles.refreshCtrl, styles.topRefreshCtrl]}>
+            <MaterialIcons size={24} color={Colors.Text_Hint} name={canFireTopLoading ? 'arrow-upward' : 'arrow-downward'} />
+            <BaseText style={styles.refreshCtrl__label}>{canFireTopLoading ? '放开加载' : '下拉加载更多'}</BaseText>
+          </View>
           {children}
-          <View style={styles.bottomRefresh}>
+          <View style={[styles.refreshCtrl, styles.bottomRefreshCtrl]}>
             <MaterialIcons size={24} color={Colors.Text_Hint} name={canFireBottomLoading ? 'arrow-downward' : 'arrow-upward'} />
-            <BaseText style={styles.bottomRefresh__label}>{canFireBottomLoading ? '放开加载' : '上拉加载更多'}</BaseText>
+            <BaseText style={styles.refreshCtrl__label}>{canFireBottomLoading ? '放开加载' : '上拉加载更多'}</BaseText>
           </View>
         </ScrollView>
       </TouchableWithoutFeedback>

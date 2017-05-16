@@ -38,6 +38,11 @@ export default class RecordsByWeek extends React.PureComponent {
     navigation: CustomPropTypes.navigation.isRequired
   }
 
+  onTopRefresh = () => {
+    const { navigation, endTime } = this.props;
+    navigation.setParams(getWeekPeriod(endTime + 1));
+  }
+
   onBottomRefresh = () => {
     const { navigation, startTime } = this.props;
     navigation.setParams(getWeekPeriod(startTime - 1));
@@ -50,7 +55,11 @@ export default class RecordsByWeek extends React.PureComponent {
     return () => <PeriodSummary {...periodSummary} />;
   }
   _renderScrollComponent = props => (
-    <BottomRefreshableScrollView {...props} onBottomRefresh={this.onBottomRefresh} />
+    <BottomRefreshableScrollView
+      {...props}
+      onTopRefresh={this.onTopRefresh}
+      onBottomRefresh={this.onBottomRefresh}
+    />
   )
 
   render() {
@@ -58,8 +67,8 @@ export default class RecordsByWeek extends React.PureComponent {
     const SummaryComponent = () => <PeriodSummary {...periodSummary} />;
 
     if (detailRecords && detailRecords.length === 0) {
-      return (
-        <BottomRefreshableScrollView onBottomRefresh={this.onBottomRefresh}>
+      return this._renderScrollComponent({
+        children: (
           <View style={styles.emptyTip}>
             <SummaryComponent />
             <View style={styles.emptyTip__labelContainer}>
@@ -67,8 +76,8 @@ export default class RecordsByWeek extends React.PureComponent {
               <BaseText style={styles.emptyTip__label}>暂无记录</BaseText>
             </View>
           </View>
-        </BottomRefreshableScrollView>
-      );
+        )
+      });
     }
 
     return (
