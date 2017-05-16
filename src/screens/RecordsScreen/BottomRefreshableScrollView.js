@@ -1,23 +1,24 @@
 import React, { PropTypes } from 'react';
-import { TouchableWithoutFeedback, ScrollView, View, StyleSheet } from 'react-native';
+import { View, ScrollView, TouchableWithoutFeedback, StyleSheet } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import BaseText from '../../components/BaseText';
 import { Colors } from '../../variables';
 
-const BottomRefreshHeight = 25;
+const BottomRefreshHeight = 40;
 
-const pullUpRefreshStyles = StyleSheet.create({
+const styles = StyleSheet.create({
   srollContainer: {
     backgroundColor: Colors.BG_Default
   },
   scrollContent: {
-    height: '100%'
+    minHeight: '100%'
   },
   bottomRefresh: {
     position: 'absolute',
     top: '100%',
     left: 0,
+    marginTop: -1,
     width: '100%',
     height: BottomRefreshHeight,
     flexDirection: 'row',
@@ -31,26 +32,31 @@ const pullUpRefreshStyles = StyleSheet.create({
   }
 });
 
-export default class PullUpToRefresh extends React.PureComponent {
+export default class BottomRefreshableScrollView extends React.Component {
   static propTypes = {
-    children: PropTypes.node,
-    onBottomRefresh: PropTypes.func,
+    ...ScrollView.propTypes,
+    onBottomRefresh: PropTypes.func
   }
-
   state = { canFireBottomLoading: false }
 
   onScroll = (evt) => {
+    const { onScroll } = this.props;
     const { canFireBottomLoading } = this.state;
-    const threshold = BottomRefreshHeight * 1.8;
-    const offsetY = evt.nativeEvent.contentOffset.y;
+    const threshold = BottomRefreshHeight * 1.5;
+    const { contentOffset, contentSize, layoutMeasurement } = evt.nativeEvent;
+    const bottomOffset = contentSize.height - layoutMeasurement.height - contentOffset.y;
     if (canFireBottomLoading) {
-      if (offsetY < threshold) {
+      if (bottomOffset >= -threshold) {
         this.setState({ canFireBottomLoading: false });
       }
     } else {
-      if (offsetY >= threshold) {
+      if (bottomOffset < -threshold) {
         this.setState({ canFireBottomLoading: true });
       }
+    }
+
+    if (onScroll) {
+      onScroll(evt);
     }
   }
 
@@ -64,19 +70,21 @@ export default class PullUpToRefresh extends React.PureComponent {
   }
 
   render() {
+    const { style, contentContainerStyle, children, scrollEventThrottle = 16 } = this.props;
     const { canFireBottomLoading } = this.state;
     return (
       <TouchableWithoutFeedback onPressOut={this.onPressOut}>
         <ScrollView
-          style={pullUpRefreshStyles.srollContainer}
-          contentContainerStyle={pullUpRefreshStyles.scrollContent}
+          {...this.props}
           onScroll={this.onScroll}
-          scrollEventThrottle={16}
+          scrollEventThrottle={scrollEventThrottle}
+          style={[style, styles.srollContainer]}
+          contentContainerStyle={[contentContainerStyle, styles.scrollContent]}
         >
-          {this.props.children}
-          <View style={pullUpRefreshStyles.bottomRefresh}>
+          {children}
+          <View style={styles.bottomRefresh}>
             <MaterialIcons size={24} color={Colors.Text_Hint} name={canFireBottomLoading ? 'arrow-downward' : 'arrow-upward'} />
-            <BaseText style={pullUpRefreshStyles.bottomRefresh__label}>{canFireBottomLoading ? '放开加载' : '上拉加载更多'}</BaseText>
+            <BaseText style={styles.bottomRefresh__label}>{canFireBottomLoading ? '放开加载' : '上拉加载更多'}</BaseText>
           </View>
         </ScrollView>
       </TouchableWithoutFeedback>

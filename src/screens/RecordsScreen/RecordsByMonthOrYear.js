@@ -6,7 +6,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import BaseText from '../../components/BaseText';
 import PeriodSummary from './PeriodSummary';
-import RecordsRefreshWrapper from './RecordsRefreshWrapper';
+import BottomRefreshableScrollView from './BottomRefreshableScrollView';
 import RecordItem from './RecordItem';
 import connectDB from '../../lib/connectDB';
 import CustomPropTypes from '../../lib/CustomPropTypes';
@@ -137,6 +137,9 @@ class SectionalRecords extends React.PureComponent {
   }
 
   _renderItem = ({ item }) => <RecordItem detailRecord={item} />
+  _renderScrollComponent = props => (
+    <BottomRefreshableScrollView {...props} onBottomRefresh={this.onBottomRefresh} />
+  )
   _keyExtractor = item => item._id
 
   render() {
@@ -164,15 +167,14 @@ class SectionalRecords extends React.PureComponent {
     );
 
     return (
-      <RecordsRefreshWrapper onBottomRefresh={this.onBottomRefresh}>
-        <FlatList
-          ListHeaderComponent={ListHeaderComponent}
-          ListFooterComponent={ListFooterComponent}
-          data={periodRecordsInfos[activeIndex] && periodRecordsInfos[activeIndex].records}
-          renderItem={this._renderItem}
-          keyExtractor={this._keyExtractor}
-        />
-      </RecordsRefreshWrapper>
+      <FlatList
+        renderScrollComponent={this._renderScrollComponent}
+        ListHeaderComponent={ListHeaderComponent}
+        ListFooterComponent={ListFooterComponent}
+        data={periodRecordsInfos[activeIndex] && periodRecordsInfos[activeIndex].records}
+        renderItem={this._renderItem}
+        keyExtractor={this._keyExtractor}
+      />
     );
   }
 }

@@ -4,7 +4,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 
 import BaseText from '../../components/BaseText';
 import PeriodSummary from './PeriodSummary';
-import RecordsRefreshWrapper from './RecordsRefreshWrapper';
+import BottomRefreshableScrollView from './BottomRefreshableScrollView';
 import RecordItem from './RecordItem';
 import connectDB from '../../lib/connectDB';
 import CustomPropTypes from '../../lib/CustomPropTypes';
@@ -49,31 +49,37 @@ export default class RecordsByWeek extends React.PureComponent {
     const { periodSummary } = this.props;
     return () => <PeriodSummary {...periodSummary} />;
   }
+  _renderScrollComponent = props => (
+    <BottomRefreshableScrollView {...props} onBottomRefresh={this.onBottomRefresh} />
+  )
 
   render() {
-    const { detailRecords } = this.props;
-    const content = detailRecords && detailRecords.length === 0 ? (
-      <View style={styles.emptyTip}>
-        {this._getHeaderComponent()()}
-        <View style={styles.emptyTip__labelContainer}>
-          <MaterialCommunityIcons size={100} name="newspaper" color={Colors.Text_Hint} />
-          <BaseText style={styles.emptyTip__label}>暂无记录</BaseText>
-        </View>
-      </View>
-    ) : (
+    const { detailRecords, periodSummary } = this.props;
+    const SummaryComponent = () => <PeriodSummary {...periodSummary} />;
+
+    if (detailRecords && detailRecords.length === 0) {
+      return (
+        <BottomRefreshableScrollView onBottomRefresh={this.onBottomRefresh}>
+          <View style={styles.emptyTip}>
+            <SummaryComponent />
+            <View style={styles.emptyTip__labelContainer}>
+              <MaterialCommunityIcons size={100} name="newspaper" color={Colors.Text_Hint} />
+              <BaseText style={styles.emptyTip__label}>暂无记录</BaseText>
+            </View>
+          </View>
+        </BottomRefreshableScrollView>
+      );
+    }
+
+    return (
       <FlatList
+        renderScrollComponent={this._renderScrollComponent}
         style={recordsStyles.container}
-        ListHeaderComponent={this._getHeaderComponent()}
+        ListHeaderComponent={SummaryComponent}
         data={detailRecords || []}
         renderItem={this._renderItem}
         keyExtractor={this._keyExtractor}
       />
-    );
-
-    return (
-      <RecordsRefreshWrapper onBottomRefresh={this.onBottomRefresh}>
-        {content}
-      </RecordsRefreshWrapper>
     );
   }
 }
