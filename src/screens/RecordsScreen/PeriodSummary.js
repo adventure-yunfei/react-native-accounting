@@ -3,12 +3,13 @@ import { View, StyleSheet } from 'react-native';
 
 import BaseText from '../../components/BaseText';
 
+export const SummaryHeight = 152;
+
 const SummaryColor = '#725715';
 const PaddingLeft = 17;
 
 const styles = StyleSheet.create({
   rootContainer: {
-    backgroundColor: '#FDD352',
     paddingBottom: 16,
     paddingTop: 33
   },

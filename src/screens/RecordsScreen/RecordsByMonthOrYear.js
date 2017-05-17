@@ -5,7 +5,7 @@ import moment from 'moment';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import BaseText from '../../components/BaseText';
-import PeriodSummary from './PeriodSummary';
+import PeriodSummary, { SummaryHeight } from './PeriodSummary';
 import BottomRefreshableScrollView from './BottomRefreshableScrollView';
 import RecordItem from './RecordItem';
 import connectDB from '../../lib/connectDB';
@@ -13,6 +13,8 @@ import CustomPropTypes from '../../lib/CustomPropTypes';
 import recordsScreenUtils, { RecordsPropTypes } from './recordsScreenUtils';
 import { getMonthPeriod, getWeekPeriod, getYearPeriod } from '../../utils/period';
 import { Colors } from '../../variables';
+
+import imgHeaderBG from '../../images/header-bg.png';
 
 const periodRecordsInfoType = PropTypes.shape({
   startTime: PropTypes.number.isRequired,
@@ -112,6 +114,12 @@ class SectionHeader extends React.PureComponent {
   }
 }
 
+const styles = StyleSheet.create({
+  scrollView: {
+    backgroundColor: Colors.BG_Default
+  }
+});
+
 class SectionalRecords extends React.PureComponent {
   static propTypes = {
     startTime: PropTypes.number.isRequired,
@@ -142,13 +150,6 @@ class SectionalRecords extends React.PureComponent {
   }
 
   _renderItem = ({ item }) => <RecordItem detailRecord={item} />
-  _renderScrollComponent = props => (
-    <BottomRefreshableScrollView
-      {...props}
-      onTopRefresh={this.onTopRefresh}
-      onBottomRefresh={this.onBottomRefresh}
-    />
-  )
   _keyExtractor = item => item._id
 
   render() {
@@ -165,7 +166,6 @@ class SectionalRecords extends React.PureComponent {
     ));
     const ListHeaderComponent = () => (
       <View>
-        <PeriodSummary {...periodSummary} />
         {activeIndex == null ? sectionHeaders : sectionHeaders.slice(0, activeIndex + 1)}
       </View>
     );
@@ -174,10 +174,21 @@ class SectionalRecords extends React.PureComponent {
         {activeIndex != null && sectionHeaders.slice(activeIndex + 1)}
       </View>
     );
+    const renderScrollComponent = props => (
+      <BottomRefreshableScrollView
+        {...props}
+        backgroundSource={imgHeaderBG}
+        windowHeight={SummaryHeight}
+        header={<PeriodSummary {...periodSummary} />}
+        onTopRefresh={this.onTopRefresh}
+        onBottomRefresh={this.onBottomRefresh}
+        scrollableViewStyle={styles.scrollView}
+      />
+    );
 
     return (
       <FlatList
-        renderScrollComponent={this._renderScrollComponent}
+        renderScrollComponent={renderScrollComponent}
         ListHeaderComponent={ListHeaderComponent}
         ListFooterComponent={ListFooterComponent}
         data={periodRecordsInfos[activeIndex] && periodRecordsInfos[activeIndex].records}

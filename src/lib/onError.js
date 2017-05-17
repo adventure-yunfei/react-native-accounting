@@ -13,5 +13,6 @@ export default function onError(err) {
   } else {
     msgs.push(err);
   }
-  console.warn(`Possible Unhandled Promise Rejection: ${msgs.join('\n')}`);
+  global.__error = err;
+  console.warn(`Error Occured: ${msgs.join('\n')}`);
 }

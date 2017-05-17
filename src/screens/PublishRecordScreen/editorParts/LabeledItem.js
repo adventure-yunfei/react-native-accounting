@@ -42,6 +42,6 @@ export default class LabeledItem extends React.PureComponent {
       </View>
     );
 
-    return onPress ? <TouchableHighlight onPress={onPress}>{content}</TouchableHighlight> : content;
+    return onPress ? <TouchableHighlight onPress={onPress} underlayColor="#f1f1f1">{content}</TouchableHighlight> : content;
   }
 }

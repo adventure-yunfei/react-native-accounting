@@ -1,23 +1,32 @@
 import React, { PropTypes } from 'react';
-import { View, ScrollView, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
+import ParallaxView from 'react-native-parallax-view';
 
-import SummaryHeader from './SummaryHeader';
+import SummaryHeader, { SummaryHeaderHeight } from './SummaryHeader';
 import WriteOneButton from './WriteOneButton';
 import SummaryDetails from './SummaryDetails';
 import HomeTabbar from './HomeTabbar';
 import { Geometries } from '../../variables';
 import CustomPropTypes from '../../lib/CustomPropTypes';
 import connectDB from '../../lib/connectDB';
+import { calculateAsset } from '../../lib/recordHelpers';
 import EnumRecordType from '../../enums/EnumRecordType';
 import { getDayPeriod, getMonthPeriod, getWeekPeriod, getYearPeriod } from '../../utils/period';
 
+import imgHeaderBG from '../../images/header-bg.png';
+
 const styles = StyleSheet.create({
   homeContainer: {
-    backgroundColor: '#fff'
+    backgroundColor: '#fff',
+    flex: 1
   },
 
   contentBottomPlaceholder: {
     height: Geometries.Tabbar
+  },
+
+  scrollableView: {
+    shadowOpacity: 0
   }
 });
 
@@ -31,15 +40,8 @@ const PeriodSummaryType = PropTypes.shape({
   const { startTime: dayStartTime } = getDayPeriod(now);
   const { startTime: weekStartTime } = getWeekPeriod(now);
   const { startTime: monthStartTime } = getMonthPeriod(now);
-  const { startTime: yearStartTime, endTime: yearEndTime } = getYearPeriod(now);
-  return dbs.records.find({
-    selector: {
-      _id: {
-        $gte: yearStartTime.toString(),
-        $lte: yearEndTime.toString()
-      }
-    }
-  }).then(({ docs }) => {
+  const { startTime: yearStartTime } = getYearPeriod(now);
+  return dbs.records.allDocsData().then((records) => {
     let dayIn = 0;
     let dayExp = 0;
     let weekIn = 0;
@@ -48,7 +50,7 @@ const PeriodSummaryType = PropTypes.shape({
     let monthExp = 0;
     let yearIn = 0;
     let yearExp = 0;
-    docs.forEach(({ type, amount, timestamp }) => {
+    records.forEach(({ type, amount, timestamp }) => {
       if (type === EnumRecordType.Expenditure) {
         if (timestamp >= dayStartTime) {
           dayExp += amount;
@@ -59,7 +61,9 @@ const PeriodSummaryType = PropTypes.shape({
         if (timestamp >= monthStartTime) {
           monthExp += amount;
         }
-        yearExp += amount;
+        if (timestamp >= yearStartTime) {
+          yearExp += amount;
+        }
       } else if (type === EnumRecordType.Income) {
         if (timestamp >= dayStartTime) {
           dayIn += amount;
@@ -70,7 +74,9 @@ const PeriodSummaryType = PropTypes.shape({
         if (timestamp >= monthStartTime) {
           monthIn += amount;
         }
-        yearIn += amount;
+        if (timestamp >= yearStartTime) {
+          yearIn += amount;
+        }
       }
     });
     const getSummary = (income, expenditure) => ({ income, expenditure });
@@ -78,7 +84,8 @@ const PeriodSummaryType = PropTypes.shape({
       daySummary: getSummary(dayIn, dayExp),
       weekSummary: getSummary(weekIn, weekExp),
       monthSummary: getSummary(monthIn, monthExp),
-      yearSummary: getSummary(yearIn, yearExp)
+      yearSummary: getSummary(yearIn, yearExp),
+      totalAsset: calculateAsset(records)
     };
   });
 })
@@ -88,7 +95,8 @@ export default class HomeScreen extends React.PureComponent {
     daySummary: PeriodSummaryType,
     weekSummary: PeriodSummaryType,
     monthSummary: PeriodSummaryType,
-    yearSummary: PeriodSummaryType
+    yearSummary: PeriodSummaryType,
+    totalAsset: PropTypes.number
   }
 
   static navigationOptions = {
@@ -102,13 +110,22 @@ export default class HomeScreen extends React.PureComponent {
       daySummary = defaultSummary,
       weekSummary = defaultSummary,
       monthSummary = defaultSummary,
-      yearSummary = defaultSummary
+      yearSummary = defaultSummary,
+      totalAsset = 0
     } = this.props;
 
     return (
       <View style={styles.homeContainer}>
-        <ScrollView>
-          <SummaryHeader />
+        <ParallaxView
+          backgroundSource={imgHeaderBG}
+          windowHeight={SummaryHeaderHeight}
+          header={(
+            <SummaryHeader
+              income={monthSummary.income} expenditure={monthSummary.expenditure} asset={totalAsset}
+            />
+          )}
+          scrollableViewStyle={styles.scrollableView}
+        >
           <WriteOneButton navigation={navigation} />
           <SummaryDetails
             navigation={navigation}
@@ -118,7 +135,7 @@ export default class HomeScreen extends React.PureComponent {
             yearSummary={yearSummary}
           />
           <View style={styles.contentBottomPlaceholder} />
-        </ScrollView>
+        </ParallaxView>
         <HomeTabbar navigation={navigation} />
       </View>
     );

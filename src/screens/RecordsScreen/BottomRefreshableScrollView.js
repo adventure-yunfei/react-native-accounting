@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import { View, ScrollView, TouchableWithoutFeedback, StyleSheet } from 'react-native';
+import ParallaxView from 'react-native-parallax-view';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import BaseText from '../../components/BaseText';
@@ -20,7 +21,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: Colors.BG_Default
+    backgroundColor: 'transparent'
   },
   refreshCtrl__label: {
     paddingLeft: 16,
@@ -36,12 +37,16 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: -(RefreshCtrlHeight - 1),
     left: 0
+  },
+
+  scrollableView: {
+    shadowOpacity: 0
   }
 });
 
 export default class BottomRefreshableScrollView extends React.Component {
   static propTypes = {
-    ...ScrollView.propTypes,
+    ...ParallaxView.propTypes,
     onTopRefresh: PropTypes.func,
     onBottomRefresh: PropTypes.func
   }
@@ -96,27 +101,48 @@ export default class BottomRefreshableScrollView extends React.Component {
   }
 
   render() {
-    const { style, contentContainerStyle, children, scrollEventThrottle = 16 } = this.props;
+    const { style, contentContainerStyle, children, scrollEventThrottle = 16,
+      backgroundSource, header, scrollableViewStyle } = this.props;
     const { canFireTopLoading, canFireBottomLoading } = this.state;
+    const topRefreshCtrl = (
+      <View style={[styles.refreshCtrl, styles.topRefreshCtrl]}>
+        <MaterialIcons size={24} color={Colors.Text_Hint} name={canFireTopLoading ? 'arrow-upward' : 'arrow-downward'} />
+        <BaseText style={styles.refreshCtrl__label}>{canFireTopLoading ? '放开加载' : '下拉加载更多'}</BaseText>
+      </View>
+    );
+    let hasTopCtrlShown = false;
+    let ScrollComponent = ScrollView;
+    let extraScrollProps = null;
+    if (backgroundSource) {
+      ScrollComponent = ParallaxView;
+      extraScrollProps = {
+        scrollableViewStyle: [styles.scrollableView, scrollableViewStyle],
+        header: (
+          <View>
+            {topRefreshCtrl}
+            {header}
+          </View>
+        )
+      };
+      hasTopCtrlShown = true;
+    }
     return (
       <TouchableWithoutFeedback onPressOut={this.onPressOut}>
-        <ScrollView
+        <ScrollComponent
           {...this.props}
+          {...extraScrollProps}
           onScroll={this.onScroll}
           scrollEventThrottle={scrollEventThrottle}
           style={[style, styles.srollContainer]}
           contentContainerStyle={[contentContainerStyle, styles.scrollContent]}
         >
-          <View style={[styles.refreshCtrl, styles.topRefreshCtrl]}>
-            <MaterialIcons size={24} color={Colors.Text_Hint} name={canFireTopLoading ? 'arrow-upward' : 'arrow-downward'} />
-            <BaseText style={styles.refreshCtrl__label}>{canFireTopLoading ? '放开加载' : '下拉加载更多'}</BaseText>
-          </View>
           {children}
+          {!hasTopCtrlShown && topRefreshCtrl}
           <View style={[styles.refreshCtrl, styles.bottomRefreshCtrl]}>
             <MaterialIcons size={24} color={Colors.Text_Hint} name={canFireBottomLoading ? 'arrow-downward' : 'arrow-upward'} />
             <BaseText style={styles.refreshCtrl__label}>{canFireBottomLoading ? '放开加载' : '上拉加载更多'}</BaseText>
           </View>
-        </ScrollView>
+        </ScrollComponent>
       </TouchableWithoutFeedback>
     );
   }

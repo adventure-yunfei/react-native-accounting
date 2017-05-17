@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-import { FontSizes } from '../../variables';
+import { FontSizes, Colors } from '../../variables';
+
+export const SummaryHeaderHeight = 264;
 
 const HeaderBaseColor = 'rgb(115,88,10)';
 const styles = StyleSheet.create({
   headerContainer: {
-    height: 264,
-    backgroundColor: 'rgb(255,218,85)',
+    height: SummaryHeaderHeight,
+    backgroundColor: Colors.Orange,
     paddingTop: 46,
     paddingLeft: 22
   },
@@ -58,7 +60,14 @@ function renderSummaryRow(label, amount) {
 }
 
 export default class SummaryHeader extends React.PureComponent {
+  static propTypes = {
+    income: PropTypes.number.isRequired,
+    expenditure: PropTypes.number.isRequired,
+    asset: PropTypes.number.isRequired
+  }
+
   render() {
+    const { income, expenditure, asset } = this.props;
     return (
       <View style={styles.headerContainer}>
         <Text style={styles.timeLabel}>
@@ -68,9 +77,9 @@ export default class SummaryHeader extends React.PureComponent {
         </Text>
 
         <View style={styles.descRowsContainer}>
-          {renderSummaryRow('本月收入', 12312)}
-          {renderSummaryRow('本月支出', 231)}
-          {renderSummaryRow('总资产', 131412)}
+          {renderSummaryRow('本月收入', income)}
+          {renderSummaryRow('本月支出', expenditure)}
+          {renderSummaryRow('总资产', asset)}
         </View>
       </View>
     );

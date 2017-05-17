@@ -5,7 +5,6 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import BaseText from '../../components/BaseText';
 import AccountsSummary from './AccountsSummary';
 import flatToTree from '../../utils/flatToTree';
-import utils from '../../utils';
 import connectDB from '../../lib/connectDB';
 import dbGetters from '../../lib/dbGetters';
 import { Colors } from '../../variables';

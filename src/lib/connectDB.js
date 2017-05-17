@@ -57,7 +57,9 @@ function listenToDBChanges(dataCalls, callback) {
       });
       dbChanges[dbName] = change;
     }
-    change.on('change', callback);
+    change
+      .on('change', callback)
+      .on('error', onError);
     return function unlisten() {
       change.removeListener('change', callback);
     };
