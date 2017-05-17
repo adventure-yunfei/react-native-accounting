@@ -1,3 +1,4 @@
+/** 默认的错误处理 */
 export default function onError(err) {
   const msgs = [];
   if (err == null) {

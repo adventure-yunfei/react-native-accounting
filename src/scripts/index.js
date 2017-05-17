@@ -1,6 +1,7 @@
 import PouchDB from '../vendor-fix/pouchdb-react-native';
 import databases, { initializeDBs } from '../databases';
 import clearDBs from './clearDBs';
+import onError from '../lib/onError';
 import initializeFromFeidee from './initializeFromFeidee';
 import exampleData from './exampleData';
 
@@ -11,7 +12,8 @@ export default global._shell = {
 
   reinitializeDDocs() {
     return clearDBs.clearDesignDocs()
-      .then(initializeDBs);
+      .then(initializeDBs)
+      .catch(onError);
   },
 
   clearDBs,

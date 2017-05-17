@@ -14,6 +14,7 @@ import EditRecordScreen from './screens/PublishRecordScreen/EditRecordScreen';
 import ChartScreen from './screens/ChartScreen';
 import { provideRootNavigationContext } from './lib/exposeRootNavigation';
 import { argumentNavigatorRouter } from './lib/navigationExt';
+import onError from './lib/onError';
 import { Colors } from './variables';
 import { initializeDBs } from './databases';
 import './scripts';
@@ -81,7 +82,9 @@ App.displayName = `App-${App.name || App.displayName}`;
 export default class AppWrapper extends React.PureComponent {
   state = { dbsReady: false }
   componentWillMount() {
-    initializeDBs().then(() => this.setState({ dbsReady: true }));
+    initializeDBs()
+      .then(() => this.setState({ dbsReady: true }))
+      .catch(onError);
   }
   render() {
     if (!this.state.dbsReady) {

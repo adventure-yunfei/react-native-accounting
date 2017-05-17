@@ -11,6 +11,7 @@ import { Colors } from '../../variables';
 import EnumRecordType from '../../enums/EnumRecordType';
 import exposeRootNavigation from '../../lib/exposeRootNavigation';
 import CustomPropTypes from '../../lib/CustomPropTypes';
+import onError from '../../lib/onError';
 import databases from '../../databases';
 
 const styles = StyleSheet.create({
@@ -82,7 +83,7 @@ export default class RecordItem extends React.PureComponent {
     databases.records.validatingPut({
       ...this.props.detailRecord,
       _deleted: true
-    });
+    }).catch(onError);
   }
 
   onEditPress = () => {
