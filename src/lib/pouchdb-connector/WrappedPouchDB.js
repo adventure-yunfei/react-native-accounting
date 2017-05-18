@@ -12,7 +12,7 @@ const isNotDesignDoc = doc => !isDesignDoc(doc);
 
 function take(arr, startIdx = 0, endIdx = arr.length - 1, cnt = Number.MAX_SAFE_INTEGER, skip = 0) {
   const sliceStart = startIdx + skip;
-  const sliceCnt = Math.min(cnt, endIdx - startIdx - skip);
+  const sliceCnt = Math.min(cnt, ((endIdx - startIdx) + 1) - skip);
   return arr.slice(
     sliceStart,
     sliceStart + sliceCnt
@@ -23,7 +23,7 @@ function takeReverse(arr, startIdx = arr.length - 1, endIdx = 0,
   cnt = Number.MAX_SAFE_INTEGER, skip = 0) {
   const result = [];
   const sliceStart = startIdx - skip;
-  const sliceCnt = Math.min(cnt, startIdx - endIdx - skip);
+  const sliceCnt = Math.min(cnt, ((startIdx - endIdx) + 1) - skip);
   const sliceEnd = sliceStart - sliceCnt;
   for (let idx = sliceStart; idx > sliceEnd; idx--) {
     result.push(arr[idx]);
@@ -68,7 +68,10 @@ export default class WrappedPouchDB {
       since: 'now',
       live: true
     })
-      .on('change', () => this.refreshCache())
+      .on('change', () => {
+        console.warn('changes');
+        this.refreshCache();
+      })
       .on('error', err => console.warn(`err: ${err}`));
 
     this.refreshCache();
@@ -110,10 +113,10 @@ export default class WrappedPouchDB {
             // else ignore if doc already exists
           });
       };
-      if (!this.$viewsConfig) {
+      if (!this.viewsConfig) {
         return Promise.resolve();
       }
-      return Promise.all(map(this.$viewsConfig, createViewDesignDoc));
+      return Promise.all(map(this.viewsConfig, createViewDesignDoc));
     };
     return initializeViews();
   }
@@ -158,7 +161,7 @@ export default class WrappedPouchDB {
     if (doc._deleted && isDesignDoc(doc)) {
       return { valid: true, message: null };
     }
-    const errMsg = validate(this.$schema, doc);
+    const errMsg = validate(this.schema, doc);
     return {
       valid: !errMsg,
       message: errMsg
@@ -169,7 +172,7 @@ export default class WrappedPouchDB {
     if (doc._deleted || isDesignDoc(doc)) {
       return doc;
     }
-    return Object.assign(createImmutableSchemaData(this.$schema, doc).toJS(), pick(doc, ['_rev']));
+    return Object.assign(createImmutableSchemaData(this.schema, doc).toJS(), pick(doc, ['_rev']));
   }
 
   onChanges(callback) {
@@ -188,10 +191,10 @@ export default class WrappedPouchDB {
     if (!valid) {
       return Promise.reject({ message: `Validation failed: ${message}` });
     }
-    return this.put(
+    return this.originDB.put(
       this.filterDocFields(doc),
       ...args
-    );
+    ).then(() => this.refreshCache);
   }
 
   validatingBulkDocs(docs, ...args) {
@@ -208,9 +211,9 @@ export default class WrappedPouchDB {
     if (invalidResult) {
       return Promise.reject({ message: `Validation failed: index: ${invalidResult.index}, ${invalidResult.message}` });
     }
-    return this.bulkDocs(
+    return this.originDB.bulkDocs(
       docs.map(doc => this.filterDocFields(doc)),
       ...args
-    );
+    ).then(() => this.refreshCache());
   }
 }

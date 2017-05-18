@@ -6,6 +6,7 @@ import { StackNavigator } from 'react-navigation';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
+import TestScreen from './screens/TestScreen';
 import HomeScreen from './screens/HomeScreen';
 import AccountsScreen from './screens/AccountsScreen';
 import RecordsScreen from './screens/RecordsScreen';
@@ -54,6 +55,10 @@ const App = argumentNavigatorRouter(StackNavigator(
 
     Chart: {
       screen: ChartScreen
+    },
+
+    __Test__: {
+      screen: TestScreen
     }
   },
 
