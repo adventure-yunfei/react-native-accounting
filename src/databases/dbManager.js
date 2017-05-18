@@ -1,4 +1,4 @@
-import DBManager from '../lib/DBManager';
+import { DBManager } from '../lib/pouchdb-connector';
 import config from '../config';
 
 export default new DBManager({

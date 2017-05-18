@@ -8,7 +8,7 @@ import SummaryDetails from './SummaryDetails';
 import HomeTabbar from './HomeTabbar';
 import { Geometries } from '../../variables';
 import CustomPropTypes from '../../lib/CustomPropTypes';
-import connectDB from '../../lib/connectDB';
+import { connectDB } from '../../lib/pouchdb-connector';
 import { calculateAsset } from '../../lib/recordHelpers';
 import EnumRecordType from '../../enums/EnumRecordType';
 import { getDayPeriod, getMonthPeriod, getWeekPeriod, getYearPeriod } from '../../utils/period';

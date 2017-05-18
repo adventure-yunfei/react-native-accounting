@@ -9,7 +9,7 @@ import DateSelector from './editorParts/DateSelector';
 import RemarkInput from './editorParts/RemarkInput';
 import EditorButtonBar from './editorParts/EditorButtonBar';
 import { editorStyles } from './editorParts/editorCommon';
-import connectDB from '../../lib/connectDB';
+import { connectDB } from '../../lib/pouchdb-connector';
 import { Colors } from '../../variables';
 import exposeRootNavigation from '../../lib/exposeRootNavigation';
 import EnumCategoryTargetType from '../../enums/EnumCategoryTargetType';

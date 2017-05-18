@@ -48,7 +48,6 @@ const dev = global._dev = {
           amount
         }));
       })))
-      .then(() => dev.perfAndRecord(res, 'find', () => databases.records.find({ selector: {} })))
       .then(() => dev.perfAndRecord(res, 'allDocs', () => databases.records.allDocs()))
       .then(() => global.alert(JSON.stringify(res.sort())));
   }

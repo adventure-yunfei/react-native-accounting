@@ -5,8 +5,9 @@ import last from 'lodash/last';
 import BaseText from '../../components/BaseText';
 import PeriodSummary from './PeriodSummary';
 import RecordItem from './RecordItem';
-import connectDB from '../../lib/connectDB';
+import { connectDB } from '../../lib/pouchdb-connector';
 import recordsScreenUtils, { recordsStyles } from './recordsScreenUtils';
+import onError from '../../lib/onError';
 import { Colors } from '../../variables';
 
 const FetchLimit = 20;
@@ -91,24 +92,21 @@ export default class RecordsByDay extends React.PureComponent {
     const { accountMap, categoryMap, databases } = this.props;
     if (otherDetailRecords && otherDetailRecords.length && !this.__fetchingMore) {
       this.__fetchingMore = true;
-      databases.records.findData({
-        selector: {
-          _id: {
-            $lt: last(otherDetailRecords)._id
-          }
-        },
-        sort: [{ _id: 'desc' }],
-        limit: FetchLimit,
+      databases.records.allDocsData({
+        descending: true,
+        startkey: last(otherDetailRecords)._id,
+        skip: 1
       })
         .then((recordsRes) => {
           this.setState({
             otherDetailRecords: otherDetailRecords.concat(recordsScreenUtils.buildDetailRecords({
               accountMap,
               categoryMap,
-              records: recordsRes.docs
+              records: recordsRes
             }))
           }, () => this.__fetchingMore = false);
-        });
+        })
+        .catch(onError);
     }
   }
 

@@ -2,6 +2,10 @@ module.exports = {
   "parser": "babel-eslint",
   "extends": "airbnb",
 
+  "globals": {
+    "__DEV__": false
+  },
+
   "rules": {
     // ### We don't need these... ###
     // underscore naming convention (this._foo) for private props is useful
@@ -14,6 +18,7 @@ module.exports = {
     "react/require-default-props": "off",
     // "if" statement seperates codes of different conditions. It's intuitive with lonely "if" in that case
     "no-lonely-if": "off",
+    "no-plusplus": "off",
 
 
     // ### Following are my own coding preference ###

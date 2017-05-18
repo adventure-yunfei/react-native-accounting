@@ -1,10 +1,10 @@
 import React from 'react';
 import hoistNonReactStatic from 'hoist-non-react-statics';
 
-import databases from '../databases';
-import onError from '../lib/onError';
+import injection from './injection';
+import onError from '../../lib/onError';
 
-const dbChanges = {};
+const { injected } = injection;
 
 class ReadOnlyDB {
   constructor(db, dbName, dataCalls) {
@@ -41,27 +41,17 @@ export function getReadOnlyDBs() {
   const result = {
     __dataCalls: [] // Record fetch data calls
   };
-  Object.keys(databases).forEach((name) => {
-    result[name] = new ReadOnlyDB(databases[name], name, result.__dataCalls);
+  Object.keys(injected.databases).forEach((name) => {
+    result[name] = new ReadOnlyDB(injected.databases[name], name, result.__dataCalls);
   });
   return result;
 }
 
 function listenToDBChanges(dataCalls, callback) {
   const unlistens = dataCalls.map(([dbName/* , method, ...args */]) => {
-    let change = dbChanges[dbName];
-    if (!change) {
-      change = databases[dbName].changes({
-        since: 'now',
-        live: true
-      })
-        .on('error', onError);
-      dbChanges[dbName] = change;
-    }
-    change
-      .on('change', callback);
+    injected.databases[dbName].onChanges(callback);
     return function unlisten() {
-      change.removeListener('change', callback);
+      injected.databases[dbName].offChanges(callback);
     };
   });
   return function cancel() {
@@ -73,7 +63,7 @@ export default function connectDB(mapDBsToProps, { listenChanges = true } = {}) 
   return (ViewComponent) => {
     class DBConnectWrapper extends React.PureComponent {
       state = {
-        databases
+        databases: injected.databases
       }
 
       componentWillMount() {

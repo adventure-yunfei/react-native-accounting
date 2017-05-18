@@ -6,7 +6,6 @@ import flatToTree from '../../../utils/flatToTree';
 import utils from '../../../utils';
 import { componentWillApplyProps } from '../../../lib/lifecycle';
 import EnumCategoryType from '../../../enums/EnumCategoryType';
-import EnumCategoryTargetType from '../../../enums/EnumCategoryTargetType';
 
 export const PropKeyCatId = 'categoryId';
 

@@ -4,7 +4,7 @@ import map from 'lodash/map';
 import sortBy from 'lodash/sortBy';
 import reduce from 'lodash/reduce';
 
-import connectDB from '../../lib/connectDB';
+import { connectDB } from '../../lib/pouchdb-connector';
 import dbGetters from '../../lib/dbGetters';
 import ChartView from './ChartView';
 import { getMonthPeriod } from '../../utils/period';

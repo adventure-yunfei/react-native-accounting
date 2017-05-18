@@ -6,7 +6,7 @@ import BaseText from '../../components/BaseText';
 import PeriodSummary, { SummaryHeight } from './PeriodSummary';
 import BottomRefreshableScrollView from './BottomRefreshableScrollView';
 import RecordItem from './RecordItem';
-import connectDB from '../../lib/connectDB';
+import { connectDB } from '../../lib/pouchdb-connector';
 import CustomPropTypes from '../../lib/CustomPropTypes';
 import recordsScreenUtils, { recordsStyles, RecordsPropTypes } from './recordsScreenUtils';
 import { getWeekPeriod } from '../../utils/period';
