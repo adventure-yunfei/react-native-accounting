@@ -54,12 +54,12 @@ function listenToDBChanges(dataCalls, callback) {
       change = databases[dbName].changes({
         since: 'now',
         live: true
-      });
+      })
+        .on('error', onError);
       dbChanges[dbName] = change;
     }
     change
-      .on('change', callback)
-      .on('error', onError);
+      .on('change', callback);
     return function unlisten() {
       change.removeListener('change', callback);
     };
