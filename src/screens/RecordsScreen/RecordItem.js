@@ -83,7 +83,7 @@ export default class RecordItem extends React.PureComponent {
     databases.records.validatingPut({
       ...this.props.detailRecord,
       _deleted: true
-    }).catch(onError);
+    }).catch(onError());
   }
 
   onEditPress = () => {

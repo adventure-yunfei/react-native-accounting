@@ -68,7 +68,7 @@ export default class PublishRecordBase extends React.PureComponent {
       .then(() => {
         navigationExt(rootNavigation).replace('Records', getDayPeriod());
       })
-      .catch(onError);
+      .catch(onError());
   }
 
   onPublishAgain = () => {

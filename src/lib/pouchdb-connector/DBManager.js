@@ -24,7 +24,7 @@ export default class DBManager {
     if (this._remoteCouchdbHost) {
       PouchDB.sync(actualDBName, this._remoteCouchdbHost + actualDBName, {
         live: true
-      }).on('error', onError);
+      }).on('error', onError('sync'));
     }
     this.databases[name] = db;
     this[name] = db;

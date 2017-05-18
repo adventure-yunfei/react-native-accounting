@@ -82,7 +82,7 @@ export default function connectDB(mapDBsToProps, { listenChanges = true } = {}) 
                 this.setState(data);
               }
             })
-            .catch(onError);
+            .catch(onError('mapDBsToProps'));
         };
         doMapDBs();
       }

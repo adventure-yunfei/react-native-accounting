@@ -89,7 +89,7 @@ export default class AppWrapper extends React.PureComponent {
   componentWillMount() {
     initializeDBs()
       .then(() => this.setState({ dbsReady: true }))
-      .catch(onError);
+      .catch(onError('initializeDBs'));
   }
   render() {
     if (!this.state.dbsReady) {

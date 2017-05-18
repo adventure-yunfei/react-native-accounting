@@ -13,7 +13,7 @@ export default global._shell = {
   reinitializeDDocs() {
     return clearDBs.clearDesignDocs()
       .then(initializeDBs)
-      .catch(onError);
+      .catch(onError());
   },
 
   clearDBs,

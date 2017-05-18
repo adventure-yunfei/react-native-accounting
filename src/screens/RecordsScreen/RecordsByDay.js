@@ -106,7 +106,7 @@ export default class RecordsByDay extends React.PureComponent {
             }))
           }, () => this.__fetchingMore = false);
         })
-        .catch(onError);
+        .catch(onError());
     }
   }
 
