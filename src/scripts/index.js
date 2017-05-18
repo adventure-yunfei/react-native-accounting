@@ -1,4 +1,4 @@
-import PouchDB from '../vendor-fix/pouchdb-react-native';
+import PouchDB from 'pouchdb-react-native';
 import databases, { initializeDBs } from '../databases';
 import clearDBs from './clearDBs';
 import onError from '../lib/onError';

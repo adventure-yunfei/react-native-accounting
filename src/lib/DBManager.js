@@ -1,6 +1,6 @@
 import pick from 'lodash/pick';
 import map from 'lodash/map';
-import PouchDB from '../vendor-fix/pouchdb-react-native';
+import PouchDB from 'pouchdb-react-native';
 import pouchdbFind from 'pouchdb-find';
 import { validate, createImmutableSchemaData } from 'immutable-json-schema';
 import shortid from 'shortid';

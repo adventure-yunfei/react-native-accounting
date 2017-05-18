@@ -3617,9 +3617,9 @@ pouchdb-abstract-mapreduce@6.2.0:
     pouchdb-promise "6.2.0"
     pouchdb-utils "6.2.0"
 
-pouchdb-adapter-asyncstorage@6.2.2:
-  version "6.2.2"
-  resolved "http://registry.npm.taobao.org/pouchdb-adapter-asyncstorage/download/pouchdb-adapter-asyncstorage-6.2.2.tgz#7d661d02cdf3fadf2d4c937ed4f37dbae81b1566"
+pouchdb-adapter-asyncstorage@6.2.3:
+  version "6.2.3"
+  resolved "http://registry.npm.taobao.org/pouchdb-adapter-asyncstorage/download/pouchdb-adapter-asyncstorage-6.2.3.tgz#2f13a572b36a0520d10445c7c3be62d8f8308e7e"
   dependencies:
     atob "2.0.3"
     blob-polyfill "1.0.20150320"
@@ -3782,11 +3782,11 @@ pouchdb-promise@6.2.0:
   dependencies:
     lie "3.1.1"
 
-pouchdb-react-native@^6.2.2:
-  version "6.2.2"
-  resolved "http://registry.npm.taobao.org/pouchdb-react-native/download/pouchdb-react-native-6.2.2.tgz#25bcce36d5292c122eb9dcda3de2cd0575e703bc"
+pouchdb-react-native@^6.2.3:
+  version "6.2.3"
+  resolved "http://registry.npm.taobao.org/pouchdb-react-native/download/pouchdb-react-native-6.2.3.tgz#283231166518fe86760d292e6026d4c2560308f7"
   dependencies:
-    pouchdb-adapter-asyncstorage "6.2.2"
+    pouchdb-adapter-asyncstorage "6.2.3"
     pouchdb-adapter-http "6.2.0"
     pouchdb-core "6.2.0"
     pouchdb-mapreduce "6.2.0"
@@ -4134,7 +4134,7 @@ react-native-menu@~0.20.1:
   dependencies:
     react-timer-mixin "^0.13.3"
 
-react-native-parallax-view@^2.0.6:
+react-native-parallax-view@~2.0.6:
   version "2.0.6"
   resolved "http://registry.npm.taobao.org/react-native-parallax-view/download/react-native-parallax-view-2.0.6.tgz#7de78edb7a2a0aba6c01b99fce828d387cec3e93"
   dependencies:
