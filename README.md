@@ -1,3 +1,8 @@
+# 特性
+
+- iOS/Android 跨平台 (by React Native)
+- 离线数据以及数据远程同步 (by PouchDB/CouchDB)
+
 # DEMO
 
 ![image](http://static.yunfei.me/react-native-accounting-demo.gif)
