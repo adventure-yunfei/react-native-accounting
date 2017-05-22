@@ -1,16 +1,12 @@
 import React, { PropTypes } from 'react';
 import { FlatList, View, StyleSheet } from 'react-native';
-import last from 'lodash/last';
 
 import BaseText from '../../components/BaseText';
 import PeriodSummary from './PeriodSummary';
 import RecordItem from './RecordItem';
 import { connectDB } from '../../lib/pouchdb-connector';
-import recordsScreenUtils, { recordsStyles } from './recordsScreenUtils';
-import onError from '../../lib/onError';
+import recordsScreenUtils, { recordsStyles, RecordsPropTypes } from './recordsScreenUtils';
 import { Colors } from '../../variables';
-
-const FetchLimit = 20;
 
 const styles = StyleSheet.create({
   todayEmptyTip: {
@@ -36,26 +32,38 @@ const styles = StyleSheet.create({
   }
 });
 
-@connectDB((dbs, { endTime }) => Promise.all([
+@connectDB((dbs, { startTime, endTime }) => Promise.all([
   recordsScreenUtils.mapAccountsAndCategoriesDBs(dbs),
   dbs.records.allDocsData({
     descending: true,
-    limit: FetchLimit,
     startkey: (endTime + 1).toString()
   })
-]).then(([data, records]) => Object.assign(data, {
-  initialDetailRecords: recordsScreenUtils.buildDetailRecords({ ...data, records })
-})), { listenChanges: false })
+]).then(([data, records]) => {
+  const detailRecords = recordsScreenUtils.buildDetailRecords({ ...data, records });
+  const todayDetailRecords = [];
+  const otherDetailRecords = [];
+  detailRecords.forEach((record) => {
+    if (record.timestamp >= startTime) {
+      todayDetailRecords.push(record);
+    } else {
+      otherDetailRecords.push(record);
+    }
+  });
+  return {
+    todayDetailRecords,
+    otherDetailRecords,
+    todaySummary: recordsScreenUtils.calculateSummary(todayDetailRecords)
+  };
+}))
 export default class RecordsByDay extends React.PureComponent {
   static propTypes = {
-    startTime: PropTypes.number.isRequired,
     /* eslint-disable react/no-unused-prop-types */
+    startTime: PropTypes.number.isRequired,
     endTime: PropTypes.number.isRequired,
     /* eslint-enable react/no-unused-prop-types */
-    accountMap: PropTypes.object,
-    categoryMap: PropTypes.object,
-    initialDetailRecords: PropTypes.array,
-    databases: PropTypes.object.isRequired
+    todayDetailRecords: PropTypes.array,
+    otherDetailRecords: PropTypes.array,
+    todaySummary: RecordsPropTypes.periodSummary
   }
 
   static defaultProps = {
@@ -68,52 +76,10 @@ export default class RecordsByDay extends React.PureComponent {
     otherDetailRecords: null
   }
 
-  componentWillReceiveProps({ initialDetailRecords, startTime }) {
-    if (!this.props.initialDetailRecords && initialDetailRecords) {
-      const todayDetailRecords = [];
-      const otherDetailRecords = [];
-      initialDetailRecords.forEach((record) => {
-        if (record.timestamp >= startTime) {
-          todayDetailRecords.push(record);
-        } else {
-          otherDetailRecords.push(record);
-        }
-      });
-      this.setState({
-        todayDetailRecords,
-        otherDetailRecords,
-        todaySummary: recordsScreenUtils.calculateSummary(todayDetailRecords),
-      });
-    }
-  }
-
-  fetchMoreRecords = () => {
-    const { otherDetailRecords } = this.state;
-    const { accountMap, categoryMap, databases } = this.props;
-    if (otherDetailRecords && otherDetailRecords.length && !this.__fetchingMore) {
-      this.__fetchingMore = true;
-      databases.records.allDocsData({
-        descending: true,
-        startkey: last(otherDetailRecords)._id,
-        skip: 1
-      })
-        .then((recordsRes) => {
-          this.setState({
-            otherDetailRecords: otherDetailRecords.concat(recordsScreenUtils.buildDetailRecords({
-              accountMap,
-              categoryMap,
-              records: recordsRes
-            }))
-          }, () => this.__fetchingMore = false);
-        })
-        .catch(onError());
-    }
-  }
-
   _renderItem = ({ item }) => <RecordItem detailRecord={item} />
   _keyExtractor = item => item._id
   _getHeaderComponent = () => {
-    const { todaySummary, todayDetailRecords, otherDetailRecords } = this.state;
+    const { todaySummary, todayDetailRecords, otherDetailRecords } = this.props;
     return () => (
       <View>
         <PeriodSummary {...todaySummary} />
@@ -127,7 +93,7 @@ export default class RecordsByDay extends React.PureComponent {
   }
 
   render() {
-    const { otherDetailRecords } = this.state;
+    const { otherDetailRecords } = this.props;
     return (
       <FlatList
         style={recordsStyles.container}
@@ -135,7 +101,6 @@ export default class RecordsByDay extends React.PureComponent {
         data={otherDetailRecords || []}
         renderItem={this._renderItem}
         keyExtractor={this._keyExtractor}
-        onEndReached={this.fetchMoreRecords}
       />
     );
   }

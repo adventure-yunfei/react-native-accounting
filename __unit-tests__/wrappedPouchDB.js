@@ -8,7 +8,7 @@ let idCnt = 0;
 const testDB = global._testdb = new WrappedPouchDB({
   name: 'test',
   extra: {
-    schema: compile({ _id: 'string' }),
+    schema: compile({ _id: 'string', text: 'string', __options: { notRequired: ['text'] } }),
     generateID: () => {
       idCnt += 2;
       return padStart(idCnt.toString(), 5, '0');
@@ -17,16 +17,19 @@ const testDB = global._testdb = new WrappedPouchDB({
 });
 
 function removeRev(docs) {
-  return docs.map(doc => omit(doc, ['_rev']));
+  return docs.map((doc) => {
+    if (!doc._rev) {
+      throw new Error('document没有_rev属性');
+    }
+    return omit(doc, ['_rev']);
+  });
 }
 
 const allDocs = new Array(100).fill(0).map(() => ({
   _id: testDB.generateID()
 }));
 
-// testDB.originDB.destroy()
 testDB.validatingBulkDocs(allDocs)
-  .catch(() => {})
   .then(() => {
     return testDB.allDocsData().then((docs) => {
       assert.deepEqual(removeRev(docs), allDocs);
@@ -119,4 +122,45 @@ testDB.validatingBulkDocs(allDocs)
       assert.deepEqual(removeRev(docs), allDocs.slice(1, 3).reverse());
     });
   })
-  .then(() => console.warn('test success'), err => console.error(err));
+  .then(() => {
+    return testDB.validatingPut({
+      _id: '00007'
+    })
+      .then(() => testDB.allDocsData())
+      .then((docs) => {
+        assert.deepEqual(
+          removeRev(docs),
+          allDocs.slice(0, 3).concat([{ _id: '00007' }]).concat(allDocs.slice(3))
+        );
+      });
+  })
+  .then(() => {
+    return testDB.validatingBulkDocs([{
+      _id: '00007'
+    }])
+      .then(() => assert.Throw('不应当成功'), () => {});
+  })
+  .then(() => {
+    return testDB.allDocsData({
+      keys: ['00007', '00012']
+    })
+      .then(([doc7, doc12]) => testDB.validatingBulkDocs([
+        { _id: '00011' },
+        { _id: '00005' },
+        { ...doc7, _deleted: true },
+        { ...doc12, text: 'foo' }
+      ]))
+      .then(() => testDB.allDocsData())
+      .then((docs) => {
+        const newDocs = allDocs.concat();
+        newDocs.splice(2, 0, { _id: '00005' });
+        newDocs.splice(6, 0, { _id: '00011' });
+        newDocs[7] = {
+          ...newDocs[7],
+          text: 'foo'
+        };
+        assert.deepEqual(removeRev(docs), newDocs);
+      });
+  })
+  .then(() => console.warn('test success'), err => console.error(err))
+  .then(() => testDB.originDB.destroy());

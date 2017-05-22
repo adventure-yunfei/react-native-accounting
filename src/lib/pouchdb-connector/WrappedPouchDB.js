@@ -1,4 +1,5 @@
 import PouchDB from 'pouchdb-react-native';
+import { EventEmitter2 } from 'eventemitter2';
 import shortid from 'shortid';
 import map from 'lodash/map';
 import pick from 'lodash/pick';
@@ -34,7 +35,9 @@ function takeReverse(arr, startIdx = arr.length - 1, endIdx = 0,
 export default class WrappedPouchDB {
   originDB = null
   viewsConfig = null
-  changesSub = null
+  emitter = new EventEmitter2({
+    maxListeners: 10
+  });
 
   dataDocsFetchCache = null
   descDataDocsFetchCache = null
@@ -64,36 +67,53 @@ export default class WrappedPouchDB {
       }
     }
 
-    this.changesSub = this.originDB.changes({
-      since: 'now',
-      live: true
-    })
-      .on('change', () => {
-        console.warn('changes');
-        this.refreshCache();
-      })
-      .on('error', err => console.warn(`err: ${err}`));
-
     this.refreshCache();
   }
 
-  refreshCache() {
-    const fetchingAllDocs = this.originDB.allDocs({
-      include_docs: true
-    });
-    this.dataDocsFetchCache = fetchingAllDocs.then((result) => {
-      return result.rows.reduce((acc, { doc }) => {
-        if (isNotDesignDoc(doc)) {
-          acc.push(doc);
-        }
-        return acc;
-      }, []);
-    });
+  refreshCache(dataDocsFetching = null) {
+    this.dataDocsFetchCache = dataDocsFetching
+      || this.originDB.allDocs({ include_docs: true })
+        .then((result) => {
+          return result.rows.reduce((acc, { doc }) => {
+            if (isNotDesignDoc(doc)) {
+              acc.push(doc);
+            }
+            return acc;
+          }, []);
+        });
     this.descDataDocsFetchCache = this.dataDocsFetchCache
       .then(docs => docs.reduceRight((acc, doc) => {
         acc.push(doc);
         return acc;
       }, []));
+    return Promise.all([
+      this.dataDocsFetchCache,
+      this.descDataDocsFetchCache
+    ]);
+  }
+
+  updateCache(changedDocs = []) {
+    return this.refreshCache(
+      this.dataDocsFetchCache.then((docs) => {
+        const newDocs = docs.concat();
+        changedDocs.forEach((chgDoc) => {
+          const insertIdx = sortedIndexBy(newDocs, chgDoc, '_id');
+          const existedDoc = newDocs[insertIdx];
+          if (chgDoc._deleted) {
+            if (existedDoc && existedDoc._id === chgDoc._id) {
+              newDocs.splice(insertIdx, 1);
+            }
+          } else if (existedDoc && existedDoc._id === chgDoc._id) {
+            newDocs[insertIdx] = chgDoc;
+          } else {
+            newDocs.splice(insertIdx, 0, chgDoc);
+          }
+        });
+        return newDocs;
+      })
+    ).then(() => {
+      this.emitter.emit('change');
+    });
   }
 
   initializeDB() {
@@ -132,11 +152,26 @@ export default class WrappedPouchDB {
       endkey,
       skip,
       limit,
+      keys,
       ...unknownOpts
     } = options;
 
     if (__DEV__ && Object.keys(unknownOpts).length) {
       throw new Error('WrappedPouchDB.allDocsData: 有未知参数');
+    }
+
+    if (keys) {
+      return this.dataDocsFetchCache
+        .then((docs) => {
+          return keys.reduce((acc, key) => {
+            const insertIdx = sortedIndexBy(docs, { _id: key }, '_id');
+            const existedDoc = docs[insertIdx];
+            if (existedDoc && existedDoc._id === key) {
+              acc.push(existedDoc);
+            }
+            return acc;
+          }, []);
+        });
     }
 
     if (!startkey && !endkey && !skip && !limit) {
@@ -176,25 +211,28 @@ export default class WrappedPouchDB {
   }
 
   onChanges(callback) {
-    this.changesSub.on('change', callback);
+    this.emitter.on('change', callback);
   }
 
   offChanges(callback) {
-    this.changesSub.removeListener('change', callback);
+    this.emitter.off('change', callback);
   }
 
   validatingPut(doc, ...args) {
-    if (doc._deleted) {
-      return this.put(doc, ...args);
-    }
-    const { valid, message } = this.validateDoc(doc);
-    if (!valid) {
-      return Promise.reject({ message: `Validation failed: ${message}` });
+    if (!doc._deleted) {
+      const { valid, message } = this.validateDoc(doc);
+      if (!valid) {
+        return Promise.reject({ message: `Validation failed: ${message}` });
+      }
     }
     return this.originDB.put(
       this.filterDocFields(doc),
       ...args
-    ).then(() => this.refreshCache);
+    ).then(res => this.updateCache([{
+      ...doc,
+      _id: res.id,
+      _rev: res.rev
+    }]));
   }
 
   validatingBulkDocs(docs, ...args) {
@@ -212,8 +250,12 @@ export default class WrappedPouchDB {
       return Promise.reject({ message: `Validation failed: index: ${invalidResult.index}, ${invalidResult.message}` });
     }
     return this.originDB.bulkDocs(
-      docs.map(doc => this.filterDocFields(doc)),
+      docs.map(doc => (doc._deleted ? doc : this.filterDocFields(doc))),
       ...args
-    ).then(() => this.refreshCache());
+    ).then(results => this.updateCache(docs.map((doc, idx) => ({
+      ...doc,
+      _id: results[idx].id,
+      _rev: results[idx].rev
+    }))));
   }
 }

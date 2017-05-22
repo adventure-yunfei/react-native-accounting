@@ -15,6 +15,17 @@ export const navigationExt = navigation => ({
     });
   },
 
+  resetTo(routes, index = routes.length - 1) {
+    return navigation.dispatch(NavigationActions.reset({
+      index,
+      actions: routes.map((route) => {
+        return NavigationActions.navigate(
+          typeof route === 'string' ? { routeName: route } : route
+        );
+      })
+    }));
+  },
+
   deepNavigate(routeNamesPath, params) {
     const routeNames = routeNamesPath.split('/');
     const action = routeNames.reduceRight((acc, routeName) => {

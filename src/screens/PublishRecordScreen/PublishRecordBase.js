@@ -66,7 +66,10 @@ export default class PublishRecordBase extends React.PureComponent {
       ...data
     })
       .then(() => {
-        navigationExt(rootNavigation).replace('Records', getDayPeriod());
+        navigationExt(rootNavigation).resetTo([
+          'Home',
+          { routeName: 'Records', params: getDayPeriod() }
+        ]);
       })
       .catch(onError());
   }
